@@ -13,36 +13,30 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <title>Login</title>
+    <title>Signup</title>
 </head>
 
 <body>
 
     <div class="container pt-5">
         <div class="row d-flex justify-content-center mt-5">
-        <img src="images/logo.png" alt="logo" class="logo-img">
+            <img src="images/logo.png" alt="logo" class="logo-img">
             <form class="mt-5">
                 <div class="form-group">
-                    <label for="inputEmail">Email address</label>
-                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
-                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                        else.</small>
+                    <label for="inputName">Name</label>
+                    <input type="email" class="form-control" id="inputName" aria-describedby="emailHelp">
                 </div>
                 <div class="form-group">
-                    <label for="inputPassword">Password</label>
-                    <input type="password" class="form-control" id="inputPassword">
+                    <label for="exampleFormControlFile1">Profile picture</label>
+                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
                 </div>
-                <div class="form-group d-flex justify-content-between
-                align-items-center">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <a href="">Sign up here</a>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Signup</button>
                 </div>
             </form>
         </div>
 
     </div>
-
-
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">

@@ -22,22 +22,22 @@
         <img src="images/logo.png" alt="logo" class="logo-img">
             <form class="mt-5">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <label for="inputEmail">Email address</label>
+                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" class="form-control" id="inputPassword">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Repeat password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <label for="inputPassword1">Repeat password</label>
+                    <input type="password" class="form-control" id="inputPassword1">
                 </div>
                 <div class="form-group d-flex justify-content-between
                 align-items-center">
-                    <button type="submit" class="btn btn-primary">Signup</button>
+                    <button type="submit" class="btn btn-primary">Complete your profile</button>
                     <a href="">Log in here</a>
                 </div>
             </form>
