@@ -1,3 +1,10 @@
+<?php 
+session_start();
+
+include_once(__DIR__."/classes/c.user.php");
+
+?>
+
 <!doctype html>
 <html lang="en">
 
