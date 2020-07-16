@@ -1,5 +1,78 @@
+<?php 
+include_once(__DIR__ . "/classes/c.signup.php");
+
+
+$emailVerification = true;
+$requiredEmail = "@student.thomasmore.be";
+$requiredVerification = true;
+$passwordVerification = true;
+$emptyFields = false;
+$email = "";
+$user="";
+
+session_start();
+
+if(!empty($_POST['signup-submit'])){
+
+    // var_dump(strpos($_POST["email"], $required));
+
+    try {
+        $newUser = new Signup();
+        $newUser->setEmail($_POST['email']);
+        $newUser->setPassword($_POST['pass']);
+        $newUser->setPasswordConfirmation($_POST['passConf']);
+
+        $emailAdresses = Signup::getEmails();
+
+        foreach($emailAdresses as $emailAdress){
+            if($_POST["email"] == $emailAdress["email"]){
+                $emailVerification = false;
+            }
+        }
+
+        if(strpos($_POST["email"], $requiredEmail) == false){
+            throw new Exception(`Your email adress must end in '@student.thomasmore.be'.`);
+            $requiredVerification = false;
+        }
+
+        if($_POST["pass"] != $_POST["passConf"]){
+            throw new Exception("Passwords do not match.");
+            $passwordVerification = false;
+        }
+
+        if($emailVerification == false){
+            throw new Exception("This email adress is already in use.");
+        }
+
+        if(empty($_POST["email"]) || empty($_POST["pass"]) || empty($_POST["passConf"])){
+            throw new Exception("There are empty fields.");
+        }
+
+        if( $emailVerification == true && 
+            $requiredVerification == true && 
+            $passwordVerification == true){
+
+            $newUser->save();
+
+            $_SESSION["user"] = $_POST["email"];
+
+            header("Location: completeProfile.php");
+        }
+
+        
+
+    } catch (\Throwable $th) {
+        $error = $th->getMessage();
+    }
+}
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -17,35 +90,49 @@
 
 <body>
 
-<div class="container pt-5">
+    <div class="container pt-5">
         <div class="row d-flex justify-content-center mt-5">
-        <img src="images/logo.png" alt="logo" class="logo-img">
-            <form class="mt-5">
+
+            <img src="images/logo.png" alt="logo" class="logo-img">
+
+            <form class="mt-5" action="" method="post">
+
+                <?php if(isset($error)):?>
+                    <div  class="alert alert-danger" role="alert">
+                    <?php echo $error;?></div>
+                <?php endif;?>
+
                 <div class="form-group">
                     <label for="inputEmail">Email address</label>
-                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+                    <input type="text" name="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                 </div>
+
                 <div class="form-group">
                     <label for="inputPassword">Password</label>
-                    <input type="password" class="form-control" id="inputPassword">
+                    <input type="password" name="pass" class="form-control" id="inputPassword">
                 </div>
+
                 <div class="form-group">
                     <label for="inputPassword1">Repeat password</label>
-                    <input type="password" class="form-control" id="inputPassword1">
+                    <input type="password" name="passConf" class="form-control" id="inputPassword1">
                 </div>
+
                 <div class="form-group d-flex justify-content-between
                 align-items-center">
-                    <button type="submit" class="btn btn-primary">Complete your profile</button>
-                    <a href="">Log in here</a>
+                    <input class="btn btn-primary" type="submit" name="signup-submit" value="Submit">
+                    <a href="#">Log in here</a>
                 </div>
+
             </form>
         </div>
 
     </div>
-    
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -56,4 +143,5 @@
     </script>
     <script src="js.js"></script>
 </body>
+
 </html>

@@ -9,3 +9,28 @@
     width: 150px;
     object-fit: cover;
 }
+
+.logo-img-small{
+    width: 130px;
+    object-fit: cover;
+}
+
+.navbar-icons{
+    width: 30px;
+}
+
+.navbar-text{
+    font-size: 13px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

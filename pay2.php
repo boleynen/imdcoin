@@ -3,16 +3,6 @@ include_once(__DIR__ . "/classes/c.user.php");
 
 session_start();
 
-$users = new User();
-
-$users->setEmail($_SESSION['user']);
-$allUsers = $users->getAllUsers();
-
-// echo $allUsers[0]['name'];
-
-// echo '<pre>';
-// var_dump($allUsers);
-// echo '</pre>';
 
 
 ?>
@@ -39,35 +29,39 @@ $allUsers = $users->getAllUsers();
 
 <body>
     <div class="row mt-3 m-2">
-        <button type="button" class="btn btn-link pl-0 text-dark" onclick="goback()"><small>&lt; go back</small></button>
+        <button type="button" class="btn btn-link pl-0 text-dark" onclick="goback()"><small>&lt; go
+                back</small></button>
     </div>
     <div class="row mt-3 m-2">
 
         <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-            <p>Send IMD coins to</p>
-            <input class="form-control" type="text" placeholder="Search" aria-label="Search">
-        </div>
-       
-        <ul class="list-group mt-2 w-100">
+            <p>Preparing to send coins to:</p>
+            <ul class="list-group mt-2 w-100">
 
-        <?php
-            foreach($allUsers as $user){
-                ?>
                 <li class="list-group-item">
-                <a href="pay2.php?id=<?php echo $user['id']; ?>" class="row text-dark">
+                <a href="pay2.php?id=<?php   ?>" class="row text-dark">
                     <div class="col my-auto">
-                        <img src="images/<?php echo $user['avatar']; ?>" alt="avatar" class="img-responsive avatar-img mr-2">
-                        <?php echo $user['name']; ?>
+                        <img src="images/<?php  ?>" alt="avatar" class="img-responsive avatar-img mr-2">
+                        <?php   ?>
                     </div>
                 </a>
             </li>
-                <?php
-            }
-
-        ?>
             
         </ul>
-<!-- 
+        </div>
+
+        <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+            <p>Give an amount</p>
+            <div class="input-group mb-3">
+                <input type="number" class="form-control" placeholder="0.00"
+                    aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">IMD coins</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 
         <div class="w-100 navbar d-flex justify-content-end fixed-bottom m-0 p-0 pb-3 pt-3 bg-white">
             <input class="btn btn-primary mr-3" type="submit" value="Next">
         </div> -->

@@ -26,7 +26,10 @@ include_once(__DIR__."/classes/c.user.php");
 <body>
     <main>
         <div class="h-100">
-            <div class="row mt-5 navbar sticky-top bg-white">
+            <div class="mt-4 text-center">
+                <img src="images/logo2.png" class="logo-img-small" alt="logo">
+            </div>
+            <div class="row mt-3 navbar sticky-top bg-white">
                 <div class="col my-auto text-center">
                     <p><small>Your IMD coins</small></p>
                     <h3><strong>85.00</strong></h3>
@@ -54,191 +57,29 @@ include_once(__DIR__."/classes/c.user.php");
                             </div>
                         </div>
                     </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li><li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li>
 
                 </ul>
             </div>
-
+            <nav class="navbar fixed-bottom navbar-light bg-light d-flex justify-content-around">
+                <a class="navbar-brand" href="#">
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <img src="images/profile.svg" class="navbar-icons" alt="profile icon">
+                        <small class="navbar-text pt-0">my profile</small>
+                    </div>
+                </a>
+                <a class="navbar-brand" href="index.php">
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <img src="images/home.svg" class="navbar-icons" alt="profile icon">
+                        <small class="navbar-text pt-0">home</small>
+                    </div>
+                </a>
+                <a class="navbar-brand" href="pay.php">
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <img src="images/pay.svg" class="navbar-icons" alt="profile icon">
+                        <small class="navbar-text pt-0">send coins</small>
+                    </div>
+                </a>
+            </nav>
 
 
         </div>

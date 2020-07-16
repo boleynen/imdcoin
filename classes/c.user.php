@@ -111,6 +111,39 @@ class User{
         return $this;
     }
 
+    public function getAllUsers(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("select * from users where email != :email");
+
+        $email = $this->getEmail();
+        
+        $statement->bindValue(":email", $email);
+        
+        $statement->execute();
+        
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $data;
+    }
+
+    public function getUser(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("select * from users where id like :id");
+
+        $id = $this->getId();
+        
+        $statement->bindValue(":id", $id);
+        
+        $statement->execute();
+        
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        return $data;
+    }
+
+
 }
 
 ?>

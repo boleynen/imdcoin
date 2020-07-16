@@ -1,3 +1,41 @@
+<?php
+include_once(__DIR__ . "/classes/c.login.php");
+
+session_start();
+
+$passwordMatch = true;
+
+if(!empty($_POST['login-submit'])){
+    try {
+        $verification = new Login();
+        $verification->setEmail($_POST["email"]);
+        $verification->setPassword($_POST["pass"]);
+
+        $passwordVerification = $verification->fetchPassword();
+
+        if(password_verify($_POST["pass"], $passwordVerification)){
+            $passwordMatch = true;
+        }
+        else{
+            throw new Exception("Wrong email or password.");
+            $passwordMatch = false;
+        }
+
+        if($passwordMatch == true){
+
+            $_SESSION["user"] = $_POST["email"];
+
+            header("Location: index.php");
+        }
+
+    }catch (\Throwable $th){
+        $error = $th->getMessage();
+    }
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,23 +59,34 @@
     <div class="container pt-5">
         <div class="row d-flex justify-content-center mt-5">
         <img src="images/logo.png" alt="logo" class="logo-img">
-            <form class="mt-5">
+
+            <form class="mt-5" action="" method="post">
+
+                <?php if(isset($error)):?>
+                    <div  class="alert alert-danger" role="alert">
+                    <?php echo $error;?></div>
+                <?php endif;?>
+
                 <div class="form-group">
                     <label for="inputEmail">Email address</label>
-                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+                    <input type="email" name="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                 </div>
+
                 <div class="form-group">
                     <label for="inputPassword">Password</label>
-                    <input type="password" class="form-control" id="inputPassword">
+                    <input type="password" name="pass" class="form-control" id="inputPassword">
                 </div>
+
                 <div class="form-group d-flex justify-content-between
                 align-items-center">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <a href="">Sign up here</a>
+                    <input class="btn btn-primary" type="submit" name="login-submit" value="Login">
+                    <a href="signup.php">Sign up here</a>
                 </div>
+
             </form>
+
         </div>
 
     </div>
