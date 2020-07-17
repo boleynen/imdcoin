@@ -18,9 +18,9 @@ if(!empty($_POST['signup-submit'])){
 
     try {
         $newUser = new Signup();
-        $newUser->setEmail($_POST['email']);
-        $newUser->setPassword($_POST['pass']);
-        $newUser->setPasswordConfirmation($_POST['passConf']);
+        $newUser->setEmail(htmlspecialchars($_POST['email']), ENT_QUOTES);
+        $newUser->setPassword(htmlspecialchars($_POST['pass']), ENT_QUOTES);
+        $newUser->setPasswordConfirmation(htmlspecialchars($_POST['passConf']), ENT_QUOTES);
 
         $emailAdresses = Signup::getEmails();
 
@@ -29,9 +29,13 @@ if(!empty($_POST['signup-submit'])){
                 $emailVerification = false;
             }
         }
+        
+        if(empty($_POST["email"]) || empty($_POST["pass"]) || empty($_POST["passConf"])){
+            throw new Exception("There are empty fields.");
+        }
 
         if(strpos($_POST["email"], $requiredEmail) == false){
-            throw new Exception(`Your email adress must end in '@student.thomasmore.be'.`);
+            throw new Exception("Your email adress must end in '@student.thomasmore.be.'");
             $requiredVerification = false;
         }
 
@@ -44,8 +48,12 @@ if(!empty($_POST['signup-submit'])){
             throw new Exception("This email adress is already in use.");
         }
 
-        if(empty($_POST["email"]) || empty($_POST["pass"]) || empty($_POST["passConf"])){
-            throw new Exception("There are empty fields.");
+        if (preg_match("/[^A-Za-z0-9]/", $_POST["pass"])){
+            throw new Exception("Your password can only contain characters A to Z (uppercase or lowercase) and any number.");
+        }
+
+        if(strlen($_POST["pass"]) < 5){
+            throw new Exception("Your password must contain at least 5 characters.");
         }
 
         if( $emailVerification == true && 
@@ -122,7 +130,7 @@ if(!empty($_POST['signup-submit'])){
                 <div class="form-group d-flex justify-content-between
                 align-items-center">
                     <input class="btn btn-primary" type="submit" name="signup-submit" value="Submit">
-                    <a href="#">Log in here</a>
+                    <a href="login.php">Log in here</a>
                 </div>
 
             </form>

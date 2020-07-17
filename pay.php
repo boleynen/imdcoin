@@ -8,11 +8,6 @@ $users = new User();
 $users->setEmail($_SESSION['user']);
 $allUsers = $users->getAllUsers();
 
-// echo $allUsers[0]['name'];
-
-// echo '<pre>';
-// var_dump($allUsers);
-// echo '</pre>';
 
 
 ?>
@@ -61,7 +56,7 @@ $allUsers = $users->getAllUsers();
                     </div>
                 </a>
             </li>
-                <?php
+            <?php
             }
 
         ?>

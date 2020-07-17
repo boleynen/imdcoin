@@ -3,6 +3,13 @@ session_start();
 
 include_once(__DIR__."/classes/c.user.php");
 
+$getProfile = new User();
+$getProfile->setEmail($_SESSION['user']);
+$profile = $getProfile->getMyData();
+
+$getProfile->setEmail($_SESSION['user']);
+$allUsers = $getProfile->getAllUsers();
+
 ?>
 
 <!doctype html>
@@ -35,7 +42,8 @@ include_once(__DIR__."/classes/c.user.php");
                     <h3><strong>85.00</strong></h3>
                 </div>
                 <div class="col my-auto text-center">
-                    <button type="button" class="btn btn-primary" onclick=" relocate_pay()">Send coins</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#exampleModalCenter1">Send coins</button>
                 </div>
             </div>
 
@@ -60,20 +68,17 @@ include_once(__DIR__."/classes/c.user.php");
 
                 </ul>
             </div>
+
+            <!-- BOTTOM NAV -->
             <nav class="navbar fixed-bottom navbar-light bg-light d-flex justify-content-around">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="#" data-toggle="modal" data-target="#exampleModalCenter">
                     <div class="d-flex flex-column justify-content-center align-items-center">
                         <img src="images/profile.svg" class="navbar-icons" alt="profile icon">
                         <small class="navbar-text pt-0">my profile</small>
                     </div>
                 </a>
-                <a class="navbar-brand" href="index.php">
-                    <div class="d-flex flex-column justify-content-center align-items-center">
-                        <img src="images/home.svg" class="navbar-icons" alt="profile icon">
-                        <small class="navbar-text pt-0">home</small>
-                    </div>
-                </a>
-                <a class="navbar-brand" href="pay.php">
+
+                <a class="navbar-brand" href="#" data-toggle="modal" data-target="#exampleModalCenter1">
                     <div class="d-flex flex-column justify-content-center align-items-center">
                         <img src="images/pay.svg" class="navbar-icons" alt="profile icon">
                         <small class="navbar-text pt-0">send coins</small>
@@ -83,6 +88,162 @@ include_once(__DIR__."/classes/c.user.php");
 
 
         </div>
+
+        <!-- MY PROFILE POPUP -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Your profile</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body d-flex flex-column align-items-center">
+                        <img src="images/<?php echo $profile[0]['avatar']; ?>" alt="my profile picture"
+                            class="img-responsive profile-picture mt-2">
+                        <h4 class="pt-3 mb-0 my-auto">
+                            <strong>
+                                <?php echo $profile[0]['name'] ?>
+                            </strong>
+                        </h4>
+                        <p class="pt-3">
+                            <?php echo $profile[0]['year']?>IMD
+                        </p>
+                    </div>
+
+                    <div class="modal-body d-flex justify-content-around">
+                        <a href="#" class="btn btn-primary btn-lg" role="button" aria-disabled="true">Update account</a>
+                        <a href="logout.php" class="btn btn-secondary btn-lg" role="button"
+                            aria-disabled="true">Logout</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- SEND PERSON COINS POPUP -->
+        <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Send coins</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form action="" method="post">
+                        <div class="modal-body d-flex flex-column align-items-center" id="pay-1">
+                            <div class="w-100 m-0 p-0 pb-3 pt-3 bg-white">
+                                <p>Send IMD coins to</p>
+                                <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+                            </div>
+
+                            <select multiple style="height: 60vh;" class="list-group mt-2 w-100 overflow-auto">
+
+                                <?php
+                                foreach($allUsers as $user){
+                                ?>
+                                <option class="form-control pay-persons" value="<?php echo $user['id'] ?>">
+                                    <a href="#" class="row text-dark list-item-person" data-toggle="modal"
+                                        data-target="#exampleModalCenter2">
+                                        <div class="col my-auto">
+                                            <img src="images/<?php echo $user['avatar']; ?>" alt="avatar"
+                                                class="img-responsive avatar-img mr-2">
+                                            <?php echo $user['name']; ?>
+                                        </div>
+                                    </a>
+                                </option>
+                                <?php
+                                }
+                                ?>
+
+                            </select>
+
+                        </div>
+
+                        <div class="modal-body d-flex flex-column align-items-center" id="pay-2">
+                                <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                                    <p>Preparing to send coins to <strong><?php  ?></strong></p>
+                                </div>
+
+
+                                <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
+                                    <p>Give an amount</p>
+                                    <div class="input-group mb-3">
+                                        <input type="number" class="form-control" placeholder="0.00">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon2">IMD coins</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                                    <p>Reason for payment</p>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control long-text">
+                                    </div>
+                                </div>
+
+                                <div class="w-100 navbar d-flex justify-content-between m-0 p-0 pb-3 pt-3 bg-white">
+                                    <input class="btn btn-secondary btn-lg"  id="backBtn" type="submit" value="Back">
+                                    <input class="btn btn-primary btn-lg" type="submit" value="Pay">
+                                </div>
+
+                            </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- SEND AMOUNT COINS POPUP -->
+            <!-- <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Send coins</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body d-flex flex-column align-items-center">
+                            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                                <p>Preparing to send coins to <strong><?php  ?></strong></p>
+                            </div>
+
+
+                            <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
+                                <p>Give an amount</p>
+                                <div class="input-group mb-3">
+                                    <input type="number" class="form-control" placeholder="0.00">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">IMD coins</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                                <p>Give a reason</p>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control long-text">
+                                </div>
+                            </div>
+
+                            <div class="w-100 navbar d-flex justify-content-end m-0 p-0 pb-3 pt-3 bg-white">
+                                <input class="btn btn-primary mr-3" type="submit" value="Pay">
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div> -->
     </main>
 
 

@@ -5,6 +5,13 @@
         height: 50px;
 }
 
+.profile-picture{
+    object-fit: cover;
+    border-radius:50%;
+    width: 100px;
+    height: 100px;
+}
+
 .logo-img{
     width: 150px;
     object-fit: cover;
@@ -34,3 +41,13 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.long-text{
+    height: 120px;
+}
+
+#pay-2{
+    display: none !important;
+}
+
+

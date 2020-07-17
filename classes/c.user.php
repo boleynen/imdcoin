@@ -127,6 +127,22 @@ class User{
         return $data;
     }
 
+    public function getMyData(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("select * from users where email like :email");
+
+        $email = $this->getEmail();
+        
+        $statement->bindValue(":email", $email);
+        
+        $statement->execute();
+        
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $data;
+    }
+
     public function getUser(){
         $conn = Database::getConnection();
         
@@ -138,7 +154,7 @@ class User{
         
         $statement->execute();
         
-        $data = $statement->fetch(PDO::FETCH_ASSOC);
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
         
         return $data;
     }

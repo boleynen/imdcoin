@@ -3,7 +3,17 @@ include_once(__DIR__ . "/classes/c.user.php");
 
 session_start();
 
+$findUser = new User();
 
+$uid = intval($_GET['id']);
+
+$findUser->setId($uid);
+$user = $findUser->getUser();
+
+
+// echo '<pre>';
+// var_dump($user);
+// echo '</pre>';
 
 ?>
 
@@ -32,41 +42,37 @@ session_start();
         <button type="button" class="btn btn-link pl-0 text-dark" onclick="goback()"><small>&lt; go
                 back</small></button>
     </div>
-    <div class="row mt-3 m-2">
+    <form action="" method="post">
+        <div class="row mt-3 m-2">
 
-        <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-            <p>Preparing to send coins to:</p>
-            <ul class="list-group mt-2 w-100">
+            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                <p>Preparing to send coins to <strong><?php  echo $user[0]['name']; ?></strong></p>
+            </div>
 
-                <li class="list-group-item">
-                <a href="pay2.php?id=<?php   ?>" class="row text-dark">
-                    <div class="col my-auto">
-                        <img src="images/<?php  ?>" alt="avatar" class="img-responsive avatar-img mr-2">
-                        <?php   ?>
+
+            <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
+                <p>Give an amount</p>
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control" placeholder="0.00">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">IMD coins</span>
                     </div>
-                </a>
-            </li>
-            
-        </ul>
-        </div>
-
-        <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-            <p>Give an amount</p>
-            <div class="input-group mb-3">
-                <input type="number" class="form-control" placeholder="0.00"
-                    aria-label="Recipient's username" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <span class="input-group-text" id="basic-addon2">IMD coins</span>
                 </div>
             </div>
+
+            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                <p>Give a reason</p>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control long-text">
+                </div>
+            </div>
+
+            <div class="w-100 navbar d-flex justify-content-end m-0 p-0 pb-3 pt-3 bg-white">
+                <input class="btn btn-primary mr-3" type="submit" value="Pay">
+            </div>
+
         </div>
-
-        <!-- 
-        <div class="w-100 navbar d-flex justify-content-end fixed-bottom m-0 p-0 pb-3 pt-3 bg-white">
-            <input class="btn btn-primary mr-3" type="submit" value="Next">
-        </div> -->
-
-    </div>
+    </form>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

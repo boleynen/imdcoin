@@ -8,6 +8,7 @@ class Signup{
     private $passwordConfirmation;
     private $name;
     private $avatar;
+    private $year;
     
 
     /**
@@ -110,6 +111,26 @@ class Signup{
         return $this;
     }
 
+     /**
+     * Get the value of year
+     */ 
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * Set the value of year
+     *
+     * @return  self
+     */ 
+    public function setYear($year)
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
     public static function getEmails(){
         $conn = Database::getConnection();
         
@@ -144,15 +165,17 @@ class Signup{
         $conn = Database::getConnection();
         
         $statement = $conn->prepare("update users set 
-                                    name = :name, avatar = :avatar
+                                    name = :name, avatar = :avatar, year = :year
                                     where email like :email");
         
         $name = $this->getName();
         $avatar = $this->getAvatar();
-        $email = $this->getEmail();
+        $year = $this->getYear(); 
+        $email = $this->getEmail(); 
         
         $statement->bindValue(":name", $name);
         $statement->bindValue(":avatar", $avatar);
+        $statement->bindValue(":year", $year);
         $statement->bindValue(":email", $email);
 
         $result = $statement->execute();

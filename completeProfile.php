@@ -10,6 +10,7 @@ if(!empty($_POST['complete-submit'])){
 
     var_dump($imgPath);
     var_dump($_POST['name']);
+    var_dump($_POST['year']);
 
 
     try {
@@ -17,6 +18,7 @@ if(!empty($_POST['complete-submit'])){
         $newUser->setName($_POST['name']);
         $newUser->setAvatar($imgPath);
         $newUser->setEmail($_SESSION["user"]);
+        $newUser->setYear($_POST["year"]);
 
         if(empty($_POST["name"]) || empty($_FILES["avatar"]["name"])){
             $emptyFields = true;
@@ -64,13 +66,21 @@ if(!empty($_POST['complete-submit'])){
             <form class="mt-5" action="" method="post" enctype="multipart/form-data">
 
                 <?php if(isset($error)):?>
-                    <div  class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert">
                     <?php echo $error;?></div>
                 <?php endif;?>
 
                 <div class="form-group">
                     <label for="inputName">Name</label>
                     <input type="name" name="name" class="form-control" id="inputName" aria-describedby="emailHelp">
+                </div>
+
+                <div class="form-group">
+                    <select name="year" class="form-control">
+                        <option value="1IMD">1IMD</option>
+                        <option value="2IMD">2IMD</option>
+                        <option value="3IMD">3IMD</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
