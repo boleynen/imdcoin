@@ -26,9 +26,9 @@ var myFunction1 = function() {
     pay2.setAttribute('style', 'display:none !important');
 };
 
-var backBtn = document.querySelector("#backBtn");
+// var backBtn = document.querySelector("#backBtn");
 
-backBtn.addEventListener("click", myFunction1);
+// backBtn.addEventListener("click", myFunction1);
 
 for (var i = 0; i < elements.length; i++) {
     elements[i].addEventListener('click', myFunction, false);

@@ -8,8 +8,8 @@ $passwordMatch = true;
 if(!empty($_POST['login-submit'])){
     try {
         $verification = new Login();
-        $verification->setEmail($_POST["email"]);
-        $verification->setPassword($_POST["pass"]);
+        $verification->setEmail(htmlspecialchars($_POST["email"]));
+        $verification->setPassword(htmlspecialchars($_POST["pass"]));
 
         $passwordVerification = $verification->fetchPassword();
 
@@ -37,7 +37,7 @@ if(!empty($_POST['login-submit'])){
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="html-login">
 
 <head>
     <!-- Required meta tags -->
@@ -54,7 +54,7 @@ if(!empty($_POST['login-submit'])){
     <title>Login</title>
 </head>
 
-<body>
+<body  class="body-login">
 
     <div class="container pt-5">
         <div class="row d-flex justify-content-center mt-5">

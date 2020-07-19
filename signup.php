@@ -79,7 +79,7 @@ if(!empty($_POST['signup-submit'])){
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  class="html-login">
 
 <head>
     <!-- Required meta tags -->
@@ -96,7 +96,7 @@ if(!empty($_POST['signup-submit'])){
     <title>Signup</title>
 </head>
 
-<body>
+<body  class="body-login">
 
     <div class="container pt-5">
         <div class="row d-flex justify-content-center mt-5">

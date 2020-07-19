@@ -2,13 +2,36 @@
 session_start();
 
 include_once(__DIR__."/classes/c.user.php");
+include_once(__DIR__."/classes/c.transaction.php");
 
+// GET MY DATA
 $getProfile = new User();
 $getProfile->setEmail($_SESSION['user']);
 $profile = $getProfile->getMyData();
 
+// GET ALL USERS
 $getProfile->setEmail($_SESSION['user']);
 $allUsers = $getProfile->getAllUsers();
+
+// PAYMENT FUNCTION
+if(!empty($_POST['pay-btn'])){
+    try {
+        $payment = new Transaction();
+        $payment->setSender($profile[0]['id']);
+        $payment->setReceiver($_POST['selectReceiver']);
+        $payment->setAmount(htmlspecialchars($_POST['amount']));
+        $payment->setReason(htmlspecialchars($_POST['reason']));
+        $payment->setDate(date("Y-m-d"));
+        $payment->pay();
+
+
+    } catch (\Throwable $th) {
+        $error = $th->getMessage();
+    }
+}
+
+
+
 
 ?>
 
@@ -33,6 +56,12 @@ $allUsers = $getProfile->getAllUsers();
 <body>
     <main>
         <div class="h-100">
+
+        <?php if(isset($error)):?>
+                            <div class="alert alert-danger" role="alert">
+                                <?php echo $error;?></div>
+                            <?php endif;?>
+
             <div class="mt-4 text-center">
                 <img src="images/logo2.png" class="logo-img-small" alt="logo">
             </div>
@@ -138,12 +167,19 @@ $allUsers = $getProfile->getAllUsers();
 
                     <form action="" method="post">
                         <div class="modal-body d-flex flex-column align-items-center" id="pay-1">
+
+                            <?php if(isset($error)):?>
+                            <div class="alert alert-danger" role="alert">
+                                <?php echo $error;?></div>
+                            <?php endif;?>
+
                             <div class="w-100 m-0 p-0 pb-3 pt-3 bg-white">
                                 <p>Send IMD coins to</p>
                                 <input class="form-control" type="text" placeholder="Search" aria-label="Search">
                             </div>
 
-                            <select multiple style="height: 60vh;" class="list-group mt-2 w-100 overflow-auto">
+                            <select multiple style="height: 60vh;" class="list-group mt-2 w-100 overflow-auto"
+                                name="selectReceiver">
 
                                 <?php
                                 foreach($allUsers as $user){
@@ -167,34 +203,40 @@ $allUsers = $getProfile->getAllUsers();
                         </div>
 
                         <div class="modal-body d-flex flex-column align-items-center" id="pay-2">
-                                <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-                                    <p>Preparing to send coins to <strong><?php  ?></strong></p>
-                                </div>
 
+                            <?php if(isset($error)):?>
+                            <div class="alert alert-danger" role="alert">
+                                <?php echo $error;?></div>
+                            <?php endif;?>
 
-                                <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
-                                    <p>Give an amount</p>
-                                    <div class="input-group mb-3">
-                                        <input type="number" class="form-control" placeholder="0.00">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="basic-addon2">IMD coins</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-                                    <p>Reason for payment</p>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control long-text">
-                                    </div>
-                                </div>
-
-                                <div class="w-100 navbar d-flex justify-content-between m-0 p-0 pb-3 pt-3 bg-white">
-                                    <input class="btn btn-secondary btn-lg"  id="backBtn" type="submit" value="Back">
-                                    <input class="btn btn-primary btn-lg" type="submit" value="Pay">
-                                </div>
-
+                            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                                <p>Preparing to send coins to <strong><?php  ?></strong></p>
                             </div>
+
+
+                            <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
+                                <p>Give an amount</p>
+                                <div class="input-group mb-3">
+                                    <input type="number" name="amount" class="form-control" placeholder="0.00">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">IMD coins</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                                <p>Reason for payment</p>
+                                <div class="input-group mb-3">
+                                    <input type="text" name="reason" class="form-control long-text">
+                                </div>
+                            </div>
+
+                            <div class="w-100 navbar d-flex justify-content-between m-0 p-0 pb-3 pt-3 bg-white">
+                                <input class="btn btn-secondary btn-lg" id="backBtn" type="submit" value="Back">
+                                <input class="btn btn-primary btn-lg" name="pay-btn" type="submit" value="Pay">
+                            </div>
+
+                        </div>
 
                     </form>
 

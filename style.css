@@ -50,4 +50,22 @@ input[type=number] {
     display: none !important;
 }
 
+#complete-form{
+    width: 70%!important;
+}
+
+@media screen and (min-width: 400px) {
+    .body-login{
+      width: 400px !important;
+      height: 700px !important;
+      margin: 0 auto;
+      border: 1px solid #dfdfdf;
+    }
+    .html-login{
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+  }
 

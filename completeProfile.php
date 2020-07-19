@@ -40,7 +40,7 @@ if(!empty($_POST['complete-submit'])){
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="html-login">
 
 <head>
     <!-- Required meta tags -->
@@ -56,37 +56,40 @@ if(!empty($_POST['complete-submit'])){
     <title>Signup</title>
 </head>
 
-<body>
+<body class="body-login">
 
     <div class="container pt-5">
         <div class="row d-flex justify-content-center mt-5">
 
             <img src="images/logo.png" alt="logo" class="logo-img">
 
-            <form class="mt-5" action="" method="post" enctype="multipart/form-data">
+            <form class="mt-5" action="" method="post" enctype="multipart/form-data" id="complete-form">
 
                 <?php if(isset($error)):?>
                 <div class="alert alert-danger" role="alert">
                     <?php echo $error;?></div>
                 <?php endif;?>
 
-                <div class="form-group">
-                    <label for="inputName">Name</label>
-                    <input type="name" name="name" class="form-control" id="inputName" aria-describedby="emailHelp">
-                </div>
-
-                <div class="form-group">
-                    <select name="year" class="form-control">
-                        <option value="1IMD">1IMD</option>
-                        <option value="2IMD">2IMD</option>
-                        <option value="3IMD">3IMD</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="exampleFormControlFile1">Profile picture</label>
-                    <input type="file" name="avatar" class="form-control-file" id="exampleFormControlFile1">
-                </div>
+                    <div class="form-group">
+                        <label for="inputName">Name</label>
+                        <input type="name" name="name" class="form-control" id="inputName" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <select name="year" class="form-control">
+                            <option value="1IMD">1IMD</option>
+                            <option value="2IMD">2IMD</option>
+                            <option value="3IMD">3IMD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-picture">Profile picture</label>
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                            <input type="file" name="avatar" class="custom-file-input form-control-file"
+                                id="exampleFormControlFile1">
+                        </div>
+                    </div>
 
                 <div class="form-group">
                     <input class="btn btn-primary" type="submit" name="complete-submit" value="Signup">
