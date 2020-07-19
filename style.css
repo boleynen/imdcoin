@@ -52,7 +52,7 @@ input[type=number] {
 
 #complete-form{
     width: 70%!important;
-}
+} 
 
 @media screen and (min-width: 400px) {
     .body-login{

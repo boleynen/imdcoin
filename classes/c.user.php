@@ -159,6 +159,23 @@ class User{
         return $data;
     }
 
+    public function getUserAvatar(){
+
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("select avatar from users where id like :id");
+
+        $id = $this->getId();
+        
+        $statement->bindValue(":id", $id);
+        
+        $statement->execute();
+        
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $data;
+    }
+
 
     function searchMatch($query) {
         $conn = Database::getConnection();

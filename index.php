@@ -20,6 +20,7 @@ $transactions = $payment->getTransactions();
 
 // print("<pre>".print_r($transactions,true)."</pre>");
 
+
 // PAYMENT FUNCTION
 if(!empty($_POST['pay-btn'])){
     try {
@@ -80,31 +81,62 @@ if(!empty($_POST['pay-btn'])){
                 </div>
             </div>
 
-            <div class="row mt-5 m-0 p-0 container-fluid">
+            <div class="row mt-5 mb-5 m-0 p-0 container-fluid">
                 <div class="ml-3 mr-3">
                     <p><strong>Recent transactions</strong></p>
                 </div>
                 <ul class="ml-3 mr-3 list-group list-group-flush w-100">
 
                 <?php 
+                $i=-1;
                 foreach($transactions as $transaction){
-                    ?>
+                
+                    if($transaction['sender'] == $profile[0]['id']){
+                        $i++;
+                        $getProfile->setId($transactions[$i]['receiver']);
+                        $transactionUser = $getProfile->getUser();
+                        $avatarUser = $getProfile->getUserAvatar();
+                        ?>
+                
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-3 align-self-start my-auto">
+                                    <img src="images/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar" class="img-responsive avatar-img">
+                                </div>
+                                <div class="col-6 my-auto">
+                                    <?php echo $transactionUser[0]['name'] ?>
+                                </div>
+                                <div class="col-3 align-self-end my-auto">
+                                    <strong class="text-danger">-<?php echo $transactions[$i]['amount']?> C</strong>
+                                </div>
+                            </div>
+                        </li>
+                        <?php
+                        
+                    }else{
+                        $i++;
+                        $getProfile->setId($transactions[$i]['sender']);
+                        $transactionUser = $getProfile->getUser();
+                        $avatarUser = $getProfile->getUserAvatar();
+                        ?>
+                
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-3 align-self-start my-auto">
+                                    <img src="images/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar" class="img-responsive avatar-img">
+                                </div>
+                                <div class="col-6 my-auto">
+                                    <?php echo $transactionUser[0]['name'] ?>
+                                </div>
+                                <div class="col-3 align-self-end my-auto">
+                                    <strong class="text-success">+<?php echo $transactions[$i]['amount']?> C</strong>
+                                </div>
+                            </div>
+                        </li>
 
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-3 align-self-start my-auto">
-                                <img src="images/avatar.jpg" alt="avatar" class="img-responsive avatar-img">
-                            </div>
-                            <div class="col-6 my-auto">
-                                Bryan
-                            </div>
-                            <div class="col-3 align-self-end my-auto">
-                                <strong>+20 C</strong>
-                            </div>
-                        </div>
-                    </li>
+                        <?php
+                    }
 
-                    <?php
                 }
                 ?>
                     
