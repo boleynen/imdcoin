@@ -13,10 +13,16 @@ $profile = $getProfile->getMyData();
 $getProfile->setEmail($_SESSION['user']);
 $allUsers = $getProfile->getAllUsers();
 
+// GET ALL MY TRANSACTIONS
+$payment = new Transaction();
+$payment->setId($profile[0]['id']);
+$transactions = $payment->getTransactions();
+
+// print("<pre>".print_r($transactions,true)."</pre>");
+
 // PAYMENT FUNCTION
 if(!empty($_POST['pay-btn'])){
     try {
-        $payment = new Transaction();
         $payment->setSender($profile[0]['id']);
         $payment->setReceiver($_POST['selectReceiver']);
         $payment->setAmount(htmlspecialchars($_POST['amount']));
@@ -29,11 +35,8 @@ if(!empty($_POST['pay-btn'])){
         $error = $th->getMessage();
     }
 }
-
-
-
-
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -58,9 +61,10 @@ if(!empty($_POST['pay-btn'])){
         <div class="h-100">
 
         <?php if(isset($error)):?>
-                            <div class="alert alert-danger" role="alert">
-                                <?php echo $error;?></div>
-                            <?php endif;?>
+            <div class="alert alert-danger" role="alert">
+                <?php echo $error;?>'
+            </div>
+        <?php endif;?>
 
             <div class="mt-4 text-center">
                 <img src="images/logo2.png" class="logo-img-small" alt="logo">
@@ -68,7 +72,7 @@ if(!empty($_POST['pay-btn'])){
             <div class="row mt-3 navbar sticky-top bg-white">
                 <div class="col my-auto text-center">
                     <p><small>Your IMD coins</small></p>
-                    <h3><strong>85.00</strong></h3>
+                    <h3><strong><?php echo $profile[0]['currency']; ?> C</strong></h3>
                 </div>
                 <div class="col my-auto text-center">
                     <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -81,6 +85,11 @@ if(!empty($_POST['pay-btn'])){
                     <p><strong>Recent transactions</strong></p>
                 </div>
                 <ul class="ml-3 mr-3 list-group list-group-flush w-100">
+
+                <?php 
+                foreach($transactions as $transaction){
+                    ?>
+
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-3 align-self-start my-auto">
@@ -94,6 +103,11 @@ if(!empty($_POST['pay-btn'])){
                             </div>
                         </div>
                     </li>
+
+                    <?php
+                }
+                ?>
+                    
 
                 </ul>
             </div>
@@ -175,24 +189,21 @@ if(!empty($_POST['pay-btn'])){
 
                             <div class="w-100 m-0 p-0 pb-3 pt-3 bg-white">
                                 <p>Send IMD coins to</p>
-                                <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+                                <input class="form-control" type="text" placeholder="Search" aria-label="Search" id="search-name">
+                                <div id="suggesstion-box"></div>
                             </div>
 
-                            <select multiple style="height: 60vh;" class="list-group mt-2 w-100 overflow-auto"
+                            <select multiple size="5" class="list-group mt-2 w-100 overflow-auto " 
                                 name="selectReceiver">
 
                                 <?php
                                 foreach($allUsers as $user){
                                 ?>
-                                <option class="form-control pay-persons" value="<?php echo $user['id'] ?>">
-                                    <a href="#" class="row text-dark list-item-person" data-toggle="modal"
-                                        data-target="#exampleModalCenter2">
-                                        <div class="col my-auto">
-                                            <img src="images/<?php echo $user['avatar']; ?>" alt="avatar"
-                                                class="img-responsive avatar-img mr-2">
+                                <option class="form-control pay-persons " data-toggle="modal"
+                                        data-target="#exampleModalCenter2" value="<?php echo $user['id'] ?>">
+                                   
                                             <?php echo $user['name']; ?>
-                                        </div>
-                                    </a>
+                                        
                                 </option>
                                 <?php
                                 }
@@ -208,10 +219,6 @@ if(!empty($_POST['pay-btn'])){
                             <div class="alert alert-danger" role="alert">
                                 <?php echo $error;?></div>
                             <?php endif;?>
-
-                            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-                                <p>Preparing to send coins to <strong><?php  ?></strong></p>
-                            </div>
 
 
                             <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
@@ -243,49 +250,6 @@ if(!empty($_POST['pay-btn'])){
                 </div>
             </div>
 
-            <!-- SEND AMOUNT COINS POPUP -->
-            <!-- <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Send coins</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body d-flex flex-column align-items-center">
-                            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-                                <p>Preparing to send coins to <strong><?php  ?></strong></p>
-                            </div>
-
-
-                            <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
-                                <p>Give an amount</p>
-                                <div class="input-group mb-3">
-                                    <input type="number" class="form-control" placeholder="0.00">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2">IMD coins</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-                                <p>Give a reason</p>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control long-text">
-                                </div>
-                            </div>
-
-                            <div class="w-100 navbar d-flex justify-content-end m-0 p-0 pb-3 pt-3 bg-white">
-                                <input class="btn btn-primary mr-3" type="submit" value="Pay">
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div> -->
     </main>
 
 
@@ -303,6 +267,37 @@ if(!empty($_POST['pay-btn'])){
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
     </script>
     <script src="js.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $("#search-name").keyup(function(){
+                $.ajax({
+                type: "POST",
+                url: "autocomplete.php",
+                data:'name='+$(this).val(),
+                    success: function(data){
+                        $("#suggesstion-box").show();
+                        $("#suggesstion-box").html(data);
+                        $("#search-name").css("background","#FFF");
+                    },
+                });
+            });
+        });
+
+        function selectName(val) {
+            $("#searchReceiver").val(val);
+            $("#suggesstion-box").hide();
+
+            var pay1 = document.querySelector("#pay-1");
+            var pay2 = document.querySelector("#pay-2");
+
+            pay1.setAttribute('style', 'display:none!important');
+            pay2.setAttribute('style', 'display:flex !important');
+            
+        }
+
+</script>
 </body>
 
 </html>

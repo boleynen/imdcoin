@@ -146,7 +146,7 @@ class User{
     public function getUser(){
         $conn = Database::getConnection();
         
-        $statement = $conn->prepare("select * from users where id like :id");
+        $statement = $conn->prepare("select name from users where id like :id");
 
         $id = $this->getId();
         
@@ -158,6 +158,21 @@ class User{
         
         return $data;
     }
+
+
+    function searchMatch($query) {
+        $conn = Database::getConnection();
+        
+        $stmt = $conn->prepare($query);
+
+        $stmt->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $data;
+
+    }
+    
 
 
 }

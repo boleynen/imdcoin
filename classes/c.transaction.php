@@ -3,6 +3,7 @@
 include_once(__DIR__."/c.dbh.php");
 
 class Transaction{
+    private $id;
     private $sender;
     private $receiver;
     private $amount;
@@ -11,11 +12,23 @@ class Transaction{
 
 
     /**
-     * Get the value of sender
+     * Get the value of id
      */ 
-    public function getSender()
+    public function getId()
     {
-        return $this->sender;
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */ 
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -133,6 +146,26 @@ class Transaction{
         $result = $statement->execute();
         
         return $result;
+    }
+
+    public function getTransactions(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("select * from transactions 
+                                     where 
+                                     receiver like :id 
+                                     or 
+                                     sender like :id");
+
+        $id = $this->getId();
+        
+        $statement->bindValue(":id", $id);
+        
+        $statement->execute();
+        
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $data;
     }
 }
 
