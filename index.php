@@ -8,7 +8,9 @@ include_once(__DIR__."/classes/c.transaction.php");
 $getProfile = new User();
 $getProfile->setEmail($_SESSION['user']);
 $profile = $getProfile->getMyData();
+
 $token = $profile[0]['token'];
+
 
 // GET ALL USERS
 $getProfile->setEmail($_SESSION['user']);
@@ -25,16 +27,36 @@ $transactions = $payment->getTransactions();
 // PAYMENT FUNCTION
 if(!empty($_POST['pay-btn'])){
     try {
+        $payment->setEmail($profile[0]['id']);
+        $currency = intval($profile[0]['currency']);
+        $currency = $currency - htmlspecialchars($_POST['amount']);
+        $payment->setAmount($currency);
+        $payment->updateCurrency();
+
+        // TO DO; UPDATE RECEIVER CURRENCY
+
         $payment->setSender($profile[0]['id']);
         $payment->setReceiver($_POST['selectReceiver']);
         $payment->setAmount(htmlspecialchars($_POST['amount']));
         $payment->setReason(htmlspecialchars($_POST['reason']));
         $payment->setDate(date("Y-m-d"));
+        
+
+        if($_POST['amount'] > intval($profile[0]['currency'])){
+            throw new Exception("You can't send more coins then you own.");
+        }
+
+        if($_POST['amount'] < 1){
+            throw new Exception("Amount must be bigger then 1.");
+        }
+
         $payment->pay();
+
 
 
     } catch (\Throwable $th) {
         $error = $th->getMessage();
+        $line = $th->getLine();
     }
 }
 
@@ -75,7 +97,7 @@ if(!empty($_POST['claim-gift-btn'])){
 
         <?php if(isset($error)):?>
             <div class="alert alert-danger" role="alert">
-                <?php echo $error;?>'
+                <?php echo $error;?>
             </div>
         <?php endif;?>
 
@@ -250,6 +272,7 @@ if(!empty($_POST['claim-gift-btn'])){
                             <?php if(isset($error)):?>
                             <div class="alert alert-danger" role="alert">
                                 <?php echo $error;?></div>
+                                <?php echo $line;?></div>
                             <?php endif;?>
 
                             <div class="w-100 m-0 p-0 pb-3 pt-3 bg-white">

@@ -9,6 +9,7 @@ class Transaction{
     private $amount;
     private $reason;
     private $date;
+    private $email;
 
 
     /**
@@ -29,6 +30,14 @@ class Transaction{
         $this->id = $id;
 
         return $this;
+    }
+
+  /**
+     * Get the value of sender
+     */ 
+    public function getSender()
+    {
+        return $this->sender;
     }
 
     /**
@@ -122,6 +131,27 @@ class Transaction{
 
         return $this;
     }
+      
+
+    /**
+     * Get the value of email
+     */ 
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set the value of email
+     *
+     * @return  self
+     */ 
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
 
     public function pay(){
         $conn = Database::getConnection();
@@ -148,6 +178,24 @@ class Transaction{
         return $result;
     }
 
+    public function updateCurrency(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("update users set 
+                                    currency = :currency
+                                    where id like :id");
+        
+        $currency = $this->getAmount(); 
+        $id = $this->getId(); 
+        
+        $statement->bindValue(":currency", $currency);
+        $statement->bindValue(":id", $id);
+
+        $result = $statement->execute();
+        
+        return $result;
+    }
+
     public function getTransactions(){
         $conn = Database::getConnection();
         
@@ -155,7 +203,7 @@ class Transaction{
                                      where 
                                      receiver like :id 
                                      or 
-                                     sender like :id");
+                                     sender like :id order by date DESC");
 
         $id = $this->getId();
         
@@ -167,6 +215,8 @@ class Transaction{
         
         return $data;
     }
+
+
 
 
 }
