@@ -8,6 +8,7 @@ include_once(__DIR__."/classes/c.transaction.php");
 $getProfile = new User();
 $getProfile->setEmail($_SESSION['user']);
 $profile = $getProfile->getMyData();
+$token = $profile[0]['token'];
 
 // GET ALL USERS
 $getProfile->setEmail($_SESSION['user']);
@@ -36,6 +37,19 @@ if(!empty($_POST['pay-btn'])){
         $error = $th->getMessage();
     }
 }
+
+if(!empty($_POST['claim-gift-btn'])){
+    try {
+        $getProfile->setCurrency(10);
+        $getProfile->getFreeCoins();
+        $getProfile->setToken(NULL);
+        $getProfile->updateToken();
+
+
+    } catch (\Throwable $th) {
+        $error = $th->getMessage();
+    }
+}
 ?>
 
 
@@ -48,9 +62,7 @@ if(!empty($_POST['pay-btn'])){
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <link rel="stylesheet" href="style.css">
 
@@ -80,6 +92,26 @@ if(!empty($_POST['pay-btn'])){
                         data-target="#exampleModalCenter1">Send coins</button>
                 </div>
             </div>
+
+            <!-- FIRST LOGIN POPUP -->
+
+            <?php 
+
+            if($token == 1){
+                ?>
+                <div class="alert alert-success mx-5 mt-2" id="gift-alert" role="alert">
+                    <h4 class="alert-heading">You received a gift!</h4>
+                    <p>You received 10 IMD coins as a welcome gift.</p>
+                    <form action="" method="post">
+                        <input name="claim-gift-btn" id="gift-alert-btn" class="btn btn-lg btn-block btn-light" type="submit" value="Claim reward" onclick=createEventListener()>
+
+                    </form>
+
+                </div>
+
+                <?php
+            }
+            ?>
 
             <div class="row mt-5 mb-5 m-0 p-0 container-fluid">
                 <div class="ml-3 mr-3">
@@ -163,6 +195,7 @@ if(!empty($_POST['pay-btn'])){
 
 
         </div>
+ 
 
         <!-- MY PROFILE POPUP -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
@@ -284,11 +317,8 @@ if(!empty($_POST['pay-btn'])){
 
     </main>
 
-
-
-
-    <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
@@ -299,7 +329,8 @@ if(!empty($_POST['pay-btn'])){
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
     </script>
     <script src="js.js"></script>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 
     <script>
         $(document).ready(function(){
@@ -328,6 +359,17 @@ if(!empty($_POST['pay-btn'])){
             pay2.setAttribute('style', 'display:flex !important');
             
         }
+
+        var backBtn = document.querySelector("#backBtn");
+
+        backBtn.addEventListener("click", myFunction1);
+
+        var myFunction1 = function() {
+            var pay1 = document.querySelector("#pay-1");
+            var pay2 = document.querySelector("#pay-2");
+            pay1.setAttribute('style', 'display:flex !important');
+            pay2.setAttribute('style', 'display:none !important');
+        };
 
 </script>
 </body>

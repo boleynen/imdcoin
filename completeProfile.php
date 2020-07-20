@@ -8,9 +8,9 @@ if(!empty($_POST['complete-submit'])){
     $emptyFields = false;
     $imgPath = $_FILES["avatar"]["name"];
 
-    var_dump($imgPath);
-    var_dump($_POST['name']);
-    var_dump($_POST['year']);
+    // var_dump($imgPath);
+    // var_dump($_POST['name']);
+    // var_dump($_POST['year']);
 
 
     try {
@@ -19,6 +19,7 @@ if(!empty($_POST['complete-submit'])){
         $newUser->setAvatar($imgPath);
         $newUser->setEmail($_SESSION["user"]);
         $newUser->setYear($_POST["year"]);
+        $newUser->setToken(1);
 
         if(empty($_POST["name"]) || empty($_FILES["avatar"]["name"])){
             $emptyFields = true;

@@ -20,17 +20,27 @@ var myFunction = function() {
 };
 
 
-var backBtn = document.querySelector("#backBtn");
 
-backBtn.addEventListener("click", myFunction1);
-
-var myFunction1 = function() {
-    var pay1 = document.querySelector("#pay-1");
-    var pay2 = document.querySelector("#pay-2");
-    pay1.setAttribute('style', 'display:flex !important');
-    pay2.setAttribute('style', 'display:none !important');
-};
 
 for (var i = 0; i < elements.length; i++) {
     elements[i].addEventListener('click', myFunction, false);
 }
+
+var giftAlert = document.querySelector("#gift-alert");
+var giftAlertBtn = document.querySelector("#gift-alert-btn");
+
+// giftAlertBtn.addEventListener("click", function(){
+//     giftAlert.setAttribute('style', 'display:none !important');
+// });
+
+function createEventListener() {
+    if (giftAlert) {
+        // giftAlertBtn.addEventListener('click', function() {
+            giftAlert.setAttribute('style', 'display:none !important');
+        // });
+        console.log("success")
+    }else{
+        console.log("feil");
+    }
+}
+

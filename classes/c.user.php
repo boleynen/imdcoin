@@ -8,6 +8,8 @@ class User{
     private $password;
     private $name;
     private $avatar;
+    private $currency;
+    private $token;
 
     
 
@@ -110,7 +112,48 @@ class User{
 
         return $this;
     }
+    
+    /**
+     * Get the value of currency
+     */ 
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
 
+    /**
+     * Set the value of currency
+     *
+     * @return  self
+     */ 
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of token
+     */ 
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Set the value of token
+     *
+     * @return  self
+     */ 
+    public function setToken($token)
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    
     public function getAllUsers(){
         $conn = Database::getConnection();
         
@@ -190,6 +233,58 @@ class User{
 
     }
     
+
+    public function getFreeCoins(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("update users set 
+                                    currency = :currency
+                                    where email like :email");
+        
+        $currency = $this->getCurrency(); 
+        $email = $this->getEmail(); 
+        
+        $statement->bindValue(":currency", $currency);
+        $statement->bindValue(":email", $email);
+
+        $result = $statement->execute();
+        
+        return $result;
+    }
+
+    public function checkToken(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("SELECT token FROM users WHERE email like :email");
+
+        $email = $this->getEmail();
+        
+        $statement->bindValue(":email", $email);
+        
+        $statement->execute();
+        
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $data;
+    }
+
+    public function updateToken(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("UPDATE users SET token = :token WHERE email = :email");
+
+        $token = $this->getToken();
+        $email = $this->getEmail();
+        
+        $statement->bindValue(":token", $token);
+        $statement->bindValue(":email", $email);
+        
+        $statement->execute();
+        
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $data;
+    }
 
 
 }

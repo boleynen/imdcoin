@@ -1,5 +1,6 @@
 <?php 
 include_once(__DIR__ . "/classes/c.signup.php");
+include_once(__DIR__ . "/classes/c.user.php");
 
 
 $emailVerification = true;
@@ -23,6 +24,10 @@ if(!empty($_POST['signup-submit'])){
         $newUser->setPasswordConfirmation(htmlspecialchars($_POST['passConf']), ENT_QUOTES);
 
         $emailAdresses = Signup::getEmails();
+
+        $getFreeCoins = new User();
+        $getFreeCoins->setEmail(htmlspecialchars($_POST['email']), ENT_QUOTES);
+        // $getFreeCoins->setCurrency(10);
 
         foreach($emailAdresses as $emailAdress){
             if($_POST["email"] == $emailAdress["email"]){
@@ -61,10 +66,12 @@ if(!empty($_POST['signup-submit'])){
             $passwordVerification == true){
 
             $newUser->save();
+            // $getFreeCoins->getFreeCoins();
+
 
             $_SESSION["user"] = $_POST["email"];
 
-            header("Location: completeProfile.php");
+            header("Location: completeProfile.php?");
         }
 
         
