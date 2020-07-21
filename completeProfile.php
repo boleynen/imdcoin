@@ -14,23 +14,60 @@ if(!empty($_POST['complete-submit'])){
 
 
     try {
+        $file           = $_FILES['avatar'];
+        $fileName       = $_FILES['avatar']['name'];
+        $fileTmpName    = $_FILES['avatar']['tmp_name'];
+        $fileSize       = $_FILES['avatar']['size'];
+        
+        $fileError      = $_FILES['avatar']['error'];
+        $fileExt        = explode(".", $fileName);
+        $fileActualExt  = strtolower(end($fileExt));
+        $fileNameNew    = uniqid('', true).".".$fileActualExt;
+        
+        $allowed        = array('jpg', 'jpeg', 'png');
+
         $newUser = new Signup();
         $newUser->setName($_POST['name']);
-        $newUser->setAvatar($imgPath);
+        $newUser->setAvatar($fileNameNew);
         $newUser->setEmail($_SESSION["user"]);
         $newUser->setYear($_POST["year"]);
         $newUser->setToken(1);
 
-        if(empty($_POST["name"]) || empty($_FILES["avatar"]["name"])){
+        if(empty($_POST["name"]) || empty($_FILES["avatar"]["name"] || $fileError == 4)){
             $emptyFields = true;
         }
 
         if( $emptyFields == true){
+            
             throw new Exception("There are empty fields.");
             
+        }
+
+        if(in_array($fileActualExt, $allowed)){
+    
+            if($fileSize > 2000000){
+    
+                throw new Exception("Je bestandstype is te groot. (max. 2MB)");
+    
+            }else if($fileSize < 2000000){
+    
+                $fileDestination = 'avatars/'.$fileNameNew;
+    
+                move_uploaded_file($fileTmpName, $fileDestination);
+    
+                $newUser->complete();
+                header("Location: index.php");
+    
+            }else{
+    
+                throw new Exception("Error: " + $fileError);
+    
+            }
+
         }else{
-            $newUser->complete();
-            header("Location: index.php");
+    
+            throw new Exception("Dit bestandstype is niet juist (enkel jpg, jpeg, png)");
+    
         }
 
     } catch (\Throwable $th) {

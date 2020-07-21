@@ -118,7 +118,7 @@ if(!empty($_POST['claim-gift-btn'])){
 </head>
 
 <body>
-    <main>
+    <main id="mainIndex">
         <div class="h-100">
 
             <?php if(isset($error)):?>
@@ -130,8 +130,8 @@ if(!empty($_POST['claim-gift-btn'])){
             <div class="mt-4 text-center">
                 <img src="images/logo2.png" class="logo-img-small" alt="logo">
             </div>
-            <div class="row mt-3 navbar sticky-top bg-white">
-                <div class="col my-auto text-center">
+            <div class="row mt-3 navbar sticky-top bg-white" >
+                <div class="col my-auto text-center" id="my-currency">
                     <p><small>Your IMD coins</small></p>
                     <h3><strong><?php echo $profile[0]['currency']; ?> C</strong></h3>
                 </div>
@@ -147,23 +147,42 @@ if(!empty($_POST['claim-gift-btn'])){
 
             if($token == 1){
                 ?>
-            <div class="alert alert-success mx-5 mt-2" id="gift-alert" role="alert">
-                <h4 class="alert-heading">You received a gift!</h4>
-                <p>You received 10 IMD coins as a welcome gift.</p>
-                <form action="" method="post">
-                    <input name="claim-gift-btn" id="gift-alert-btn" class="btn btn-lg btn-block btn-light"
-                        type="submit" value="Claim reward" onclick=createEventListener()>
+                <div class="alert alert-success mx-5 mt-2" id="gift-alert" role="alert">
+                    <h4 class="alert-heading">You received a gift!</h4>
+                    <p>You received 10 IMD coins as a welcome gift.</p>
+                    <form action="" method="post">
+                        <input name="claim-gift-btn" id="gift-alert-btn" class="btn btn-lg btn-block btn-light"
+                            type="submit" value="Claim reward" onclick=createEventListener()>
 
-                </form>
+                    </form>
 
-            </div>
+                </div>
 
-            <?php
+                <?php
             }
             ?>
 
+            <!-- RECEIVED NEW PAYMENT  POPUP-->
+
+            <!-- <?php 
+
+            if($token == NULL){
+                ?>
+
+                <div class="alert alert-success alert-dismissible fade show mx-5" role="alert">
+                <strong>You received IMD coins!</strong> Tom send you 10 coins.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+
+                <?php
+                }
+                ?> -->
+
             <!-- RECENT TRANSACTIONS -->
-            <div class="row mt-5 mb-5 m-0 p-0 container-fluid">
+            <div id="my-transactions-container">
+            <div class="row mt-5 mb-5 m-0 p-0" id="my-transactions">
                 <div class="ml-3 mr-3">
                     <p><strong>Recent transactions</strong></p>
                 </div>
@@ -178,6 +197,7 @@ if(!empty($_POST['claim-gift-btn'])){
                         $userProfile->setId($transactions[$i]['receiver']);
                         $transactionUser = $userProfile->getUser();
                         $avatarUser = $userProfile->getUserAvatar();
+                        $yearUser = $userProfile->getUserYear();
                         ?>
 
                     <li class="list-group-item">
@@ -185,11 +205,12 @@ if(!empty($_POST['claim-gift-btn'])){
                             data-toggle="collapse" aria-expanded="false" aria-controls="transactionCollapse">
                             <div class="row">
                                 <div class="col-3 align-self-start my-auto">
-                                    <img src="images/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
+                                    <img src="avatars/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
                                         class="img-responsive avatar-img">
                                 </div>
                                 <div class="col-6 my-auto">
-                                    <?php echo $transactionUser[0]['name'] ?>
+                                    <?php echo $transactionUser[0]['name'] ?>, 
+                                    <small class="form-text text-muted"><?php echo $yearUser[0]['year'] ?>IMD</small>
                                 </div>
                                 <div class="col-3 align-self-end my-auto">
                                     <strong class="text-danger">-<?php echo $transactions[$i]['amount']?> C</strong>
@@ -213,6 +234,7 @@ if(!empty($_POST['claim-gift-btn'])){
                         $userProfile->setId($transactions[$i]['sender']);
                         $transactionUser = $userProfile->getUser();
                         $avatarUser = $userProfile->getUserAvatar();
+                        $yearUser = $userProfile->getUserYear();
                         ?>
 
                     <li class="list-group-item">
@@ -220,11 +242,12 @@ if(!empty($_POST['claim-gift-btn'])){
                             data-toggle="collapse" aria-expanded="false" aria-controls="transactionCollapse">
                             <div class="row">
                                 <div class="col-3 align-self-start my-auto">
-                                    <img src="images/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
+                                    <img src="avatars/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
                                         class="img-responsive avatar-img">
                                 </div>
                                 <div class="col-6 my-auto">
-                                    <?php echo $transactionUser[0]['name'] ?>
+                                    <?php echo $transactionUser[0]['name'] ?>, 
+                                    <small class="form-text text-muted"><?php echo $yearUser[0]['year'] ?>IMD</small>
                                 </div>
                                 <div class="col-3 align-self-end my-auto">
                                     <strong class="text-success">+<?php echo $transactions[$i]['amount']?> C</strong>
@@ -251,6 +274,7 @@ if(!empty($_POST['claim-gift-btn'])){
 
 
                 </ul>
+            </div>
             </div>
 
             <!-- BOTTOM NAV -->
@@ -285,7 +309,7 @@ if(!empty($_POST['claim-gift-btn'])){
                     </div>
 
                     <div class="modal-body d-flex flex-column align-items-center">
-                        <img src="images/<?php echo $profile[0]['avatar']; ?>" alt="my profile picture"
+                        <img src="avatars/<?php echo $profile[0]['avatar']; ?>" alt="my profile picture"
                             class="img-responsive profile-picture mt-2">
                         <h4 class="pt-3 mb-0 my-auto">
                             <strong>
@@ -323,10 +347,10 @@ if(!empty($_POST['claim-gift-btn'])){
                         <div class="modal-body d-flex flex-column align-items-center" id="pay-1">
 
                             <?php if(isset($error)):?>
-                            <div class="alert alert-danger" role="alert">
-                                <?php echo $error;?></div>
-                            <?php echo $line;?></div>
-                        <?php endif;?>
+                                <div class="alert alert-danger" role="alert">
+                                    <?php echo $error;?></div>
+                                <?php echo $line;?></div>
+                            <?php endif;?>
 
                         <div class="w-100 m-0 p-0 pb-3 pt-3 bg-white">
                             <p>Send IMD coins to</p>
@@ -446,6 +470,14 @@ if(!empty($_POST['claim-gift-btn'])){
             pay1.setAttribute('style', 'display:flex !important');
             pay2.setAttribute('style', 'display:none !important');
         };
+
+        $(document).ready(function() {
+            setInterval(refreshCurrency, 5000);
+            function refreshCurrency() {
+                $('#my-currency h3').load('index.php #my-currency h3');
+                $('#my-transactions-container').load('index.php #my-transactions');
+            }
+        });
     </script>
 </body>
 
