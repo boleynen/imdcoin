@@ -298,7 +298,7 @@ class User{
         
         $statement->execute();
         
-        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
         
         return $data;
     }

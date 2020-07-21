@@ -12,7 +12,6 @@ $profile = $userProfile->getMyData();
 // MY TOKEN
 $token = $profile[0]['token'];
 
-// GET RECEIVERS CURRENCY AND UPDATE IT
 
 
 // GET ALL USERS
@@ -24,18 +23,43 @@ $payment = new Transaction();
 $payment->setId($profile[0]['id']);
 $transactions = $payment->getTransactions();
 
+$payUser = new User();
+$userGotPaid = new Transaction();
+
 
 // PAYMENT FUNCTION
 if(!empty($_POST['pay-btn'])){
     try {
+        // GET MY CURRENCY AND UPDATE IT
         $payment->setEmail($profile[0]['id']);
-        $currency = intval($profile[0]['currency']);
-        $currency = $currency - htmlspecialchars($_POST['amount']);
-        $payment->setAmount($currency);
+        $myCurrency = intval($profile[0]['currency']);
+        $myCurrency = $myCurrency - htmlspecialchars($_POST['amount']);
+        $payment->setAmount($myCurrency);
         $payment->updateCurrency();
 
-        // TO DO; UPDATE RECEIVER CURRENCY
+        // GET RECEIVERS CURRENCY AND UPDATE IT
+        $payUser = new User();
+        $receiver = new Transaction();
+        // set receivers id
+            // set id for function that retreives receivers current money
+        $payUser->setId($_POST['selectReceiver']);
+            // set id for function that updates new amount
+        $receiver->setId($_POST['selectReceiver']);
+        // get currency from receiver
+        $userCurrency = $payUser->getUserCurrency();
+        // convert string to int
+            // users current money
+        $userCurrency = intval($userCurrency['currency']);
+            // users received money
+        $paidAmount = intval(htmlspecialchars($_POST['amount']));
+        // create var that contains receivers new amount of coins
+        $userCurrency = $userCurrency + $paidAmount;
+        // set that var as the amount
+        $receiver->setAmount($userCurrency);
+        // execute function
+        $receiver->updateCurrency();
 
+        // PUT TRANSACTION IN DATABASE
         $payment->setSender($profile[0]['id']);
         $payment->setReceiver($_POST['selectReceiver']);
         $payment->setAmount(htmlspecialchars($_POST['amount']));
