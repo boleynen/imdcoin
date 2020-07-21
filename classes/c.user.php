@@ -286,6 +286,23 @@ class User{
         return $data;
     }
 
+    
+    public function getUserCurrency(){
+        $conn = Database::getConnection();
+        
+        $statement = $conn->prepare("SELECT currency FROM users WHERE id like :id");
+
+        $id = $this->getId();
+        
+        $statement->bindValue(":id", $id);
+        
+        $statement->execute();
+        
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $data;
+    }
+
 
 }
 

@@ -5,23 +5,24 @@ include_once(__DIR__."/classes/c.user.php");
 include_once(__DIR__."/classes/c.transaction.php");
 
 // GET MY DATA
-$getProfile = new User();
-$getProfile->setEmail($_SESSION['user']);
-$profile = $getProfile->getMyData();
+$userProfile = new User();
+$userProfile->setEmail($_SESSION['user']);
+$profile = $userProfile->getMyData();
 
+// MY TOKEN
 $token = $profile[0]['token'];
+
+// GET RECEIVERS CURRENCY AND UPDATE IT
 
 
 // GET ALL USERS
-$getProfile->setEmail($_SESSION['user']);
-$allUsers = $getProfile->getAllUsers();
+$userProfile->setEmail($_SESSION['user']);
+$allUsers = $userProfile->getAllUsers();
 
 // GET ALL MY TRANSACTIONS
 $payment = new Transaction();
 $payment->setId($profile[0]['id']);
 $transactions = $payment->getTransactions();
-
-// print("<pre>".print_r($transactions,true)."</pre>");
 
 
 // PAYMENT FUNCTION
@@ -62,10 +63,10 @@ if(!empty($_POST['pay-btn'])){
 
 if(!empty($_POST['claim-gift-btn'])){
     try {
-        $getProfile->setCurrency(10);
-        $getProfile->getFreeCoins();
-        $getProfile->setToken(NULL);
-        $getProfile->updateToken();
+        $userProfile->setCurrency(10);
+        $userProfile->getFreeCoins();
+        $userProfile->setToken(NULL);
+        $userProfile->updateToken();
 
 
     } catch (\Throwable $th) {
@@ -84,7 +85,8 @@ if(!empty($_POST['claim-gift-btn'])){
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
     <link rel="stylesheet" href="style.css">
 
@@ -95,11 +97,11 @@ if(!empty($_POST['claim-gift-btn'])){
     <main>
         <div class="h-100">
 
-        <?php if(isset($error)):?>
+            <?php if(isset($error)):?>
             <div class="alert alert-danger" role="alert">
                 <?php echo $error;?>
             </div>
-        <?php endif;?>
+            <?php endif;?>
 
             <div class="mt-4 text-center">
                 <img src="images/logo2.png" class="logo-img-small" alt="logo">
@@ -121,41 +123,46 @@ if(!empty($_POST['claim-gift-btn'])){
 
             if($token == 1){
                 ?>
-                <div class="alert alert-success mx-5 mt-2" id="gift-alert" role="alert">
-                    <h4 class="alert-heading">You received a gift!</h4>
-                    <p>You received 10 IMD coins as a welcome gift.</p>
-                    <form action="" method="post">
-                        <input name="claim-gift-btn" id="gift-alert-btn" class="btn btn-lg btn-block btn-light" type="submit" value="Claim reward" onclick=createEventListener()>
+            <div class="alert alert-success mx-5 mt-2" id="gift-alert" role="alert">
+                <h4 class="alert-heading">You received a gift!</h4>
+                <p>You received 10 IMD coins as a welcome gift.</p>
+                <form action="" method="post">
+                    <input name="claim-gift-btn" id="gift-alert-btn" class="btn btn-lg btn-block btn-light"
+                        type="submit" value="Claim reward" onclick=createEventListener()>
 
-                    </form>
+                </form>
 
-                </div>
+            </div>
 
-                <?php
+            <?php
             }
             ?>
 
+            <!-- RECENT TRANSACTIONS -->
             <div class="row mt-5 mb-5 m-0 p-0 container-fluid">
                 <div class="ml-3 mr-3">
                     <p><strong>Recent transactions</strong></p>
                 </div>
                 <ul class="ml-3 mr-3 list-group list-group-flush w-100">
 
-                <?php 
+                    <?php 
                 $i=-1;
                 foreach($transactions as $transaction){
                 
                     if($transaction['sender'] == $profile[0]['id']){
                         $i++;
-                        $getProfile->setId($transactions[$i]['receiver']);
-                        $transactionUser = $getProfile->getUser();
-                        $avatarUser = $getProfile->getUserAvatar();
+                        $userProfile->setId($transactions[$i]['receiver']);
+                        $transactionUser = $userProfile->getUser();
+                        $avatarUser = $userProfile->getUserAvatar();
                         ?>
-                
-                        <li class="list-group-item">
+
+                    <li class="list-group-item">
+                        <a href="#transactionCollapse<?php echo $transactions[$i]['id'] ?>" class="text-dark"
+                            data-toggle="collapse" aria-expanded="false" aria-controls="transactionCollapse">
                             <div class="row">
                                 <div class="col-3 align-self-start my-auto">
-                                    <img src="images/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar" class="img-responsive avatar-img">
+                                    <img src="images/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
+                                        class="img-responsive avatar-img">
                                 </div>
                                 <div class="col-6 my-auto">
                                     <?php echo $transactionUser[0]['name'] ?>
@@ -164,20 +171,33 @@ if(!empty($_POST['claim-gift-btn'])){
                                     <strong class="text-danger">-<?php echo $transactions[$i]['amount']?> C</strong>
                                 </div>
                             </div>
-                        </li>
-                        <?php
+                        </a>
+                    </li>
+
+                        <!-- INFO ABOUT TRANSACTION COLLAPSE -->
+                        <div class="collapse" id="transactionCollapse<?php echo $transactions[$i]['id'] ?>">
+                            <div class="card card-body border-top-0">
+                                <p><span class="font-weight-bold">Date: </span><?php echo $transactions[$i]['date']?></p>
+                                <p><span class="font-weight-bold">Reason for payment: </span><?php echo $transactions[$i]['reason']?></p>
+                            </div>
+                        </div>
+
+                    <?php
                         
                     }else{
                         $i++;
-                        $getProfile->setId($transactions[$i]['sender']);
-                        $transactionUser = $getProfile->getUser();
-                        $avatarUser = $getProfile->getUserAvatar();
+                        $userProfile->setId($transactions[$i]['sender']);
+                        $transactionUser = $userProfile->getUser();
+                        $avatarUser = $userProfile->getUserAvatar();
                         ?>
-                
-                        <li class="list-group-item">
+
+                    <li class="list-group-item">
+                        <a href="#transactionCollapse<?php echo $transactions[$i]['id'] ?>" class="text-dark"
+                            data-toggle="collapse" aria-expanded="false" aria-controls="transactionCollapse">
                             <div class="row">
                                 <div class="col-3 align-self-start my-auto">
-                                    <img src="images/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar" class="img-responsive avatar-img">
+                                    <img src="images/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
+                                        class="img-responsive avatar-img">
                                 </div>
                                 <div class="col-6 my-auto">
                                     <?php echo $transactionUser[0]['name'] ?>
@@ -186,14 +206,25 @@ if(!empty($_POST['claim-gift-btn'])){
                                     <strong class="text-success">+<?php echo $transactions[$i]['amount']?> C</strong>
                                 </div>
                             </div>
-                        </li>
+                        </a>
+                    </li>
 
-                        <?php
+                        <!-- INFO ABOUT TRANSACTION COLLAPSE -->
+                        <div class="collapse" id="transactionCollapse<?php echo $transactions[$i]['id'] ?>">
+                            <div class="card card-body border-top-0">
+                                <p><span class="font-weight-bold">Date: </span><?php echo $transactions[$i]['date']?></p>
+                                <p><span class="font-weight-bold">Reason for payment: </span><?php echo $transactions[$i]['reason']?></p>
+                            </div>
+                        </div>
+
+
+                    <?php
                     }
 
                 }
                 ?>
-                    
+
+
 
                 </ul>
             </div>
@@ -215,9 +246,7 @@ if(!empty($_POST['claim-gift-btn'])){
                 </a>
             </nav>
 
-
         </div>
- 
 
         <!-- MY PROFILE POPUP -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
@@ -272,71 +301,71 @@ if(!empty($_POST['claim-gift-btn'])){
                             <?php if(isset($error)):?>
                             <div class="alert alert-danger" role="alert">
                                 <?php echo $error;?></div>
-                                <?php echo $line;?></div>
-                            <?php endif;?>
+                            <?php echo $line;?></div>
+                        <?php endif;?>
 
-                            <div class="w-100 m-0 p-0 pb-3 pt-3 bg-white">
-                                <p>Send IMD coins to</p>
-                                <input class="form-control" type="text" placeholder="Search" aria-label="Search" id="search-name">
-                                <div id="suggesstion-box"></div>
-                            </div>
+                        <div class="w-100 m-0 p-0 pb-3 pt-3 bg-white">
+                            <p>Send IMD coins to</p>
+                            <input class="form-control" type="text" placeholder="Search" aria-label="Search"
+                                id="search-name">
+                            <div id="suggesstion-box"></div>
+                        </div>
 
-                            <select multiple size="5" class="list-group mt-2 w-100 overflow-auto " 
-                                name="selectReceiver">
+                        <select multiple size="5" class="list-group mt-2 w-100 overflow-auto " name="selectReceiver">
 
-                                <?php
+                            <?php
                                 foreach($allUsers as $user){
                                 ?>
-                                <option class="form-control pay-persons " data-toggle="modal"
-                                        data-target="#exampleModalCenter2" value="<?php echo $user['id'] ?>">
-                                   
-                                            <?php echo $user['name']; ?>
-                                        
-                                </option>
-                                <?php
+                            <option class="form-control pay-persons " data-toggle="modal"
+                                data-target="#exampleModalCenter2" value="<?php echo $user['id'] ?>">
+
+                                <?php echo $user['name']; ?>
+
+                            </option>
+                            <?php
                                 }
                                 ?>
 
-                            </select>
-
-                        </div>
-
-                        <div class="modal-body d-flex flex-column align-items-center" id="pay-2">
-
-                            <?php if(isset($error)):?>
-                            <div class="alert alert-danger" role="alert">
-                                <?php echo $error;?></div>
-                            <?php endif;?>
-
-
-                            <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
-                                <p>Give an amount</p>
-                                <div class="input-group mb-3">
-                                    <input type="number" name="amount" class="form-control" placeholder="0.00">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2">IMD coins</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
-                                <p>Reason for payment</p>
-                                <div class="input-group mb-3">
-                                    <input type="text" name="reason" class="form-control long-text">
-                                </div>
-                            </div>
-
-                            <div class="w-100 navbar d-flex justify-content-between m-0 p-0 pb-3 pt-3 bg-white">
-                                <input class="btn btn-secondary btn-lg" id="backBtn" type="submit" value="Back">
-                                <input class="btn btn-primary btn-lg" name="pay-btn" type="submit" value="Pay">
-                            </div>
-
-                        </div>
-
-                    </form>
+                        </select>
 
                 </div>
+
+                <div class="modal-body d-flex flex-column align-items-center" id="pay-2">
+
+                    <?php if(isset($error)):?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo $error;?></div>
+                    <?php endif;?>
+
+
+                    <div class="w-100 navbar sticky-top m-0 p-0 pt-3 bg-white">
+                        <p>Give an amount</p>
+                        <div class="input-group mb-3">
+                            <input type="number" name="amount" class="form-control" placeholder="0.00">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">IMD coins</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-100 navbar sticky-top m-0 p-0 pb-3 pt-3 bg-white">
+                        <p>Reason for payment</p>
+                        <div class="input-group mb-3">
+                            <input type="text" name="reason" class="form-control long-text">
+                        </div>
+                    </div>
+
+                    <div class="w-100 navbar d-flex justify-content-between m-0 p-0 pb-3 pt-3 bg-white">
+                        <input class="btn btn-secondary btn-lg" id="backBtn" type="submit" value="Back">
+                        <input class="btn btn-primary btn-lg" name="pay-btn" type="submit" value="Pay">
+                    </div>
+
+                </div>
+
+                </form>
+
             </div>
+        </div>
 
     </main>
 
@@ -356,16 +385,16 @@ if(!empty($_POST['claim-gift-btn'])){
 
 
     <script>
-        $(document).ready(function(){
-            $("#search-name").keyup(function(){
+        $(document).ready(function () {
+            $("#search-name").keyup(function () {
                 $.ajax({
-                type: "POST",
-                url: "autocomplete.php",
-                data:'name='+$(this).val(),
-                    success: function(data){
+                    type: "POST",
+                    url: "autocomplete.php",
+                    data: 'name=' + $(this).val(),
+                    success: function (data) {
                         $("#suggesstion-box").show();
                         $("#suggesstion-box").html(data);
-                        $("#search-name").css("background","#FFF");
+                        $("#search-name").css("background", "#FFF");
                     },
                 });
             });
@@ -380,21 +409,20 @@ if(!empty($_POST['claim-gift-btn'])){
 
             pay1.setAttribute('style', 'display:none!important');
             pay2.setAttribute('style', 'display:flex !important');
-            
+
         }
 
         var backBtn = document.querySelector("#backBtn");
 
         backBtn.addEventListener("click", myFunction1);
 
-        var myFunction1 = function() {
+        var myFunction1 = function () {
             var pay1 = document.querySelector("#pay-1");
             var pay2 = document.querySelector("#pay-2");
             pay1.setAttribute('style', 'display:flex !important');
             pay2.setAttribute('style', 'display:none !important');
         };
-
-</script>
+    </script>
 </body>
 
 </html>
