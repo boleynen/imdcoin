@@ -22,8 +22,9 @@ if(!empty($_POST["name"])) {
         ?>
 
         <option class="form-control pay-persons" onClick="selectName('<?php echo $name["name"]; ?>');" value="<?php echo $name['id'] ?>">
-                    <?php echo $name["name"]; ?>
+            <?php echo $name["name"]; ?>
         </option>
+        
         <?php 
         } 
         ?>
