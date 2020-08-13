@@ -162,24 +162,6 @@ if(!empty($_POST['claim-gift-btn'])){
             }
             ?>
 
-            <!-- RECEIVED NEW PAYMENT  POPUP-->
-
-            <!-- <?php 
-
-            if($token == NULL){
-                ?>
-
-                <div class="alert alert-success alert-dismissible fade show mx-5" role="alert">
-                <strong>You received IMD coins!</strong> Tom send you 10 coins.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-
-                <?php
-                }
-                ?> -->
-
             <!-- RECENT TRANSACTIONS -->
             <div id="my-transactions-container">
             <div class="row mt-5 mb-5 m-0 p-0" id="my-transactions">
@@ -356,7 +338,7 @@ if(!empty($_POST['claim-gift-btn'])){
                             <p>Send IMD coins to</p>
                             <input class="form-control" type="text" placeholder="Search" aria-label="Search"
                                 id="search-name">
-                            <div id="suggesstion-box"></div>
+                            <select id="suggesstion-box" name="selectReceiver" multiple size="5" class="list-group mt-2 w-100 overflow-auto"></select>
                         </div>
 
                         <select multiple size="5" class="list-group mt-2 w-100 overflow-auto " name="selectReceiver">
@@ -433,20 +415,56 @@ if(!empty($_POST['claim-gift-btn'])){
 
 
     <script>
-        $(document).ready(function () {
-            $("#search-name").keyup(function () {
-                $.ajax({
-                    type: "POST",
-                    url: "autocomplete.php",
-                    data: 'name=' + $(this).val(),
-                    success: function (data) {
-                        $("#suggesstion-box").show();
-                        $("#suggesstion-box").html(data);
-                        $("#search-name").css("background", "#FFF");
-                    },
-                });
-            });
+        // $(document).ready(function () {
+        //     $("#search-name").keyup(function () {
+        //         $.ajax({
+        //             type: "POST",
+        //             url: "autocomplete.php",
+        //             data: 'name=' + $(this).val(),
+        //             success: function (data) {
+        //                 $("#suggesstion-box").show();
+        //                 $("#suggesstion-box").html(data);
+        //                 $("#search-name").css("background", "#FFF");
+        //             },
+        //         });
+        //     });
+        // });
+
+
+        var searchInput = document.querySelector("#search-name");
+        var searchResult = document.querySelector("#suggesstion-box");
+
+        searchInput.addEventListener('input', function(){
+                const input = searchInput.value;
+                if(input.length > 2){
+                    fetch('./ajax/search.php?name='+input)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(result => {
+                        var results = result.body;
+                        searchResult.innerHTML='';
+                        addItem(results);
+                    })
+                    .catch((error) => console.log(error))
+                } else if(input.length<2){
+                    searchResult.innerHTML = "";
+                }
         });
+
+        function addItem(results) {
+            results.forEach(user => {
+                console.log(user['id'] + ' ' + user['name']);
+                let selectItem = document.createElement('option');
+                selectItem.setAttribute("data-id", user['id']);
+                selectItem.setAttribute("data-toggle", "modal");
+                selectItem.setAttribute("data-target", "#exampleModalCenter2");              
+                var textnode = document.createTextNode(user['name']);         
+                selectItem.appendChild(textnode);                              
+                searchResult.appendChild(selectItem);
+            })
+        }
+
 
         function selectName(val) {
             $("#searchReceiver").val(val);
