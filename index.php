@@ -12,8 +12,6 @@ $profile = $userProfile->getMyData();
 // MY TOKEN
 $token = $profile[0]['token'];
 
-
-
 // GET ALL USERS
 $userProfile->setEmail($_SESSION['user']);
 $allUsers = $userProfile->getAllUsers();
@@ -25,7 +23,6 @@ $transactions = $payment->getTransactions();
 
 $payUser = new User();
 $userGotPaid = new Transaction();
-
 
 // PAYMENT FUNCTION
 if(!empty($_POST['pay-btn'])){
@@ -59,8 +56,13 @@ if(!empty($_POST['pay-btn'])){
         // execute function
         $receiver->updateCurrency();
 
+
+
         // PUT TRANSACTION IN DATABASE
         $payment->setSender($profile[0]['id']);
+        if($_POST['selectReceiver'] == NULL){
+            $payment->setReceiver($_POST['selectReceiver']);
+        }
         $payment->setReceiver($_POST['selectReceiver']);
         $payment->setAmount(htmlspecialchars($_POST['amount']));
         $payment->setReason(htmlspecialchars($_POST['reason']));
@@ -164,7 +166,7 @@ if(!empty($_POST['claim-gift-btn'])){
 
             <!-- RECENT TRANSACTIONS -->
             <div id="my-transactions-container">
-            <div class="row mt-5 mb-5 m-0 p-0" id="my-transactions">
+            <div class="row mt-5 m-0 p-0" id="my-transactions" style="margin-bottom: 100px !important">
                 <div class="ml-3 mr-3">
                     <p><strong>Recent transactions</strong></p>
                 </div>
@@ -338,10 +340,13 @@ if(!empty($_POST['claim-gift-btn'])){
                             <p>Send IMD coins to</p>
                             <input class="form-control" type="text" placeholder="Search" aria-label="Search"
                                 id="search-name">
-                            <select id="suggesstion-box" name="selectReceiver" multiple size="5" class="list-group mt-2 w-100 overflow-auto"></select>
+
+                            <select id="suggesstion-box" size="3"class="list-group mt-2 w-100 overflow-auto" onClick="selectName()" name="selectReceiver"></select>
+                            </ul>
                         </div>
 
-                        <select multiple size="5" class="list-group mt-2 w-100 overflow-auto " name="selectReceiver">
+
+                        <select multiple size="5" class="list-group mt-2 w-100 overflow-auto" name="selectReceiver">
 
                             <?php
                                 foreach($allUsers as $user){
@@ -415,28 +420,19 @@ if(!empty($_POST['claim-gift-btn'])){
 
 
     <script>
-        // $(document).ready(function () {
-        //     $("#search-name").keyup(function () {
-        //         $.ajax({
-        //             type: "POST",
-        //             url: "autocomplete.php",
-        //             data: 'name=' + $(this).val(),
-        //             success: function (data) {
-        //                 $("#suggesstion-box").show();
-        //                 $("#suggesstion-box").html(data);
-        //                 $("#search-name").css("background", "#FFF");
-        //             },
-        //         });
-        //     });
-        // });
-
 
         var searchInput = document.querySelector("#search-name");
         var searchResult = document.querySelector("#suggesstion-box");
+        let timer = null;
 
-        searchInput.addEventListener('input', function(){
+        searchInput.addEventListener('input', function(event){
+            if (timer) {
+                clearTimeout(timer)
+            }
+            timer = setTimeout(() => {
                 const input = searchInput.value;
                 if(input.length > 2){
+                    
                     fetch('./ajax/search.php?name='+input)
                     .then(response => {
                         return response.json();
@@ -447,23 +443,31 @@ if(!empty($_POST['claim-gift-btn'])){
                         addItem(results);
                     })
                     .catch((error) => console.log(error))
-                } else if(input.length<2){
-                    searchResult.innerHTML = "";
+                } else if(input.length < 2){
+                    searchResult.innerHTML='';
                 }
+            }, 500)
         });
 
+        // create new option item
         function addItem(results) {
             results.forEach(user => {
-                console.log(user['id'] + ' ' + user['name']);
                 let selectItem = document.createElement('option');
-                selectItem.setAttribute("data-id", user['id']);
+                selectItem.setAttribute("value", user['id']);
                 selectItem.setAttribute("data-toggle", "modal");
                 selectItem.setAttribute("data-target", "#exampleModalCenter2");              
+                selectItem.className = 'selected_person list-group-item list-group-item-action pay-persons';  
                 var textnode = document.createTextNode(user['name']);         
                 selectItem.appendChild(textnode);                              
                 searchResult.appendChild(selectItem);
             })
         }
+
+        searchResult.addEventListener("click", function (item) {
+            if (item.target && item.target.matches("li.selected_person")) {
+                searchInput.setAttribute('value', item.target.getAttribute('value'));
+            }
+        });
 
 
         function selectName(val) {
@@ -473,16 +477,16 @@ if(!empty($_POST['claim-gift-btn'])){
             var pay1 = document.querySelector("#pay-1");
             var pay2 = document.querySelector("#pay-2");
 
-            pay1.setAttribute('style', 'display:none!important');
+            pay1.setAttribute('style', 'display:none !important');
             pay2.setAttribute('style', 'display:flex !important');
 
         }
 
         var backBtn = document.querySelector("#backBtn");
 
-        backBtn.addEventListener("click", myFunction1);
+        backBtn.addEventListener("click", toggleModal);
 
-        var myFunction1 = function () {
+        function toggleModal() {
             var pay1 = document.querySelector("#pay-1");
             var pay2 = document.querySelector("#pay-2");
             pay1.setAttribute('style', 'display:flex !important');
