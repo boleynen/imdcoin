@@ -319,8 +319,22 @@ class User{
         return $data;
     }
 
-    public static function getUserByName($name){
+    public function getMyCurrency($id){
+        $conn = Database::getConnection();
         
+        $statement = $conn->prepare("SELECT currency FROM users WHERE id like CONCAT('%', :id ,'%') ");
+        
+        $statement->bindValue(":id", $id);
+        
+        $statement->execute();
+        
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        return $data;
+    }
+
+    public static function getUserByName($name){
+
         $conn = Database::getConnection();
 
         $statement = $conn->prepare("SELECT id, name, currency FROM users WHERE name LIKE CONCAT('%',:name ,'%') ");

@@ -136,7 +136,7 @@ if(!empty($_POST['claim-gift-btn'])){
             <div class="row mt-3 navbar sticky-top bg-white" >
                 <div class="col my-auto text-center" id="my-currency">
                     <p><small>Your IMD coins</small></p>
-                    <h3><strong><?php echo $profile[0]['currency']; ?> C</strong></h3>
+                    <h3><strong id="my-curr"></strong></h3>
                 </div>
                 <div class="col my-auto text-center">
                     <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -423,19 +423,33 @@ if(!empty($_POST['claim-gift-btn'])){
 
     <script>
 
-        function selectName(val) {
-                $("#searchReceiver").val(val);
-                $("#suggesstion-box").hide();
-            
-                var pay1 = document.querySelector("#pay-1");
-                var pay2 = document.querySelector("#pay-2");
-            
-                pay1.setAttribute('style', 'display:none !important');
-                pay2.setAttribute('style', 'display:flex !important');
-            
-            }
+
+        window.onload = function(){
+            refreshCurrency();
+        }
+
+        const myId = <?php echo $profile[0]['id'] ?>;
+
+        // refresh page
+
+        var currencyOutput = document.querySelector("#my-curr");
+
+        function refreshCurrency(){
+                fetch('./ajax/a.refresh.php?id='+myId)
+                .then(response => {
+                    return response.json();
+                })
+                .then(result => {
+                    var curr = result.body;
+                    // console.log(curr['currency']);
+                    currencyOutput.innerHTML = curr['currency'];
+                    setTimeout(refreshCurrency, 5000);
+                })
+                .catch((error) => console.log(error))
+        }
 
 
+        // show transaction details
             var transaction = document.getElementsByClassName("transaction-item");
 
             var transactionDate = document.querySelector(".transaction-date");
@@ -444,9 +458,8 @@ if(!empty($_POST['claim-gift-btn'])){
             var transactionReason1 = document.querySelector(".transaction-reason1");
             var transactionItem = document.querySelector(".transaction-item");
                 
-            const myId = <?php echo $profile[0]['id'] ?>;
 
-            var collapseIt = function() {
+            var showDetails = function() {
                 fetch('./ajax/a.transaction.php?id='+myId)
                 .then(response => {
                     return response.json();
@@ -454,7 +467,6 @@ if(!empty($_POST['claim-gift-btn'])){
                 .then(result => {
                     var details = result.body;
                     printTransaction(details);
-                    console.log(details);
                     
                 })
                 .catch((error) => console.log(error))
@@ -470,11 +482,11 @@ if(!empty($_POST['claim-gift-btn'])){
             }
 
             for (var i = 0; i < transaction.length; i++) {
-                transaction[i].addEventListener('click', collapseIt, false);
+                transaction[i].addEventListener('click', showDetails, false);
             }
 
 
-            // search for person autocomplete'
+        // search for person autocomplete
             // search input
             var searchInput = document.querySelector("#search-name");
             // search output
@@ -543,6 +555,24 @@ if(!empty($_POST['claim-gift-btn'])){
                     searchInput.setAttribute('value', item.target.getAttribute('value'));
                 }
             });
+
+
+        // hide modal 1, show modal 2 when paying user
+            function selectName(val) {
+                $("#searchReceiver").val(val);
+                $("#suggesstion-box").hide();
+            
+                var pay1 = document.querySelector("#pay-1");
+                var pay2 = document.querySelector("#pay-2");
+            
+                pay1.setAttribute('style', 'display:none !important');
+                pay2.setAttribute('style', 'display:flex !important');
+            
+            }
+
+ 
+
+
     </script>
 </body>
 
