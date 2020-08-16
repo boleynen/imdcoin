@@ -119,9 +119,9 @@ if(!empty($_POST['claim-gift-btn'])){
     <title>Home</title>
 </head>
 
-<body>
-    <main id="mainIndex">
-        <div class="h-100">
+<body >
+    <main id="mainIndex" style="display: flex">
+        <div class="h-100" style="max-width: 400px; max-height: 700px; margin: auto; overflow: hidden; position: absolute; top:0; bottom: 0; left: 0; right: 0; border: 1px solid #dfdfdf">
 
             <?php if(isset($error)):?>
             <div class="alert alert-danger" role="alert">
@@ -165,9 +165,9 @@ if(!empty($_POST['claim-gift-btn'])){
             ?>
 
             <!-- RECENT TRANSACTIONS -->
-            <div id="my-transactions-container">
-            <div class="row mt-5 m-0 p-0" id="my-transactions" style="margin-bottom: 100px !important">
-                <div class="ml-3 mr-3">
+            <div id="my-transactions-container" style="overflow-y: scroll; margin-right: -30px; height: 700px">
+            <div class="row mt-5 m-0 p-0" id="my-transactions" style="margin-bottom: 250px !important">
+                <div class="ml-3 mr-3 sticky-top bg-white" style="display: block !important; width: 100%">
                     <p><strong>Recent transactions</strong></p>
                 </div>
                 <ul class="ml-3 mr-3 list-group list-group-flush w-100">
@@ -262,7 +262,7 @@ if(!empty($_POST['claim-gift-btn'])){
             </div>
 
             <!-- BOTTOM NAV -->
-            <nav class="navbar fixed-bottom navbar-light bg-light d-flex justify-content-around">
+            <nav class="navbar position-absolute navbar-light bg-light d-flex justify-content-around" style="max-width: 400px; margin: 0 auto; top: 625px; width: 400px;">
                 <a class="navbar-brand" href="#" data-toggle="modal" data-target="#exampleModalCenter">
                     <div class="d-flex flex-column justify-content-center align-items-center">
                         <img src="images/profile.svg" class="navbar-icons" alt="profile icon">
@@ -344,24 +344,6 @@ if(!empty($_POST['claim-gift-btn'])){
                             <select id="suggesstion-box" size="3"class="list-group mt-2 w-100 overflow-auto" onClick="selectName()" name="selectReceiver"></select>
                             </ul>
                         </div>
-
-
-                        <select multiple size="5" class="list-group mt-2 w-100 overflow-auto" name="selectReceiver">
-
-                            <?php
-                                foreach($allUsers as $user){
-                                ?>
-                            <option class="form-control pay-persons " data-toggle="modal"
-                                data-target="#exampleModalCenter2" value="<?php echo $user['id'] ?>">
-
-                                <?php echo $user['name']; ?>
-
-                            </option>
-                            <?php
-                                }
-                                ?>
-
-                        </select>
 
                 </div>
 

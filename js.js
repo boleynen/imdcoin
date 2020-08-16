@@ -33,10 +33,11 @@
     function toggleModal() {
         var pay1 = document.querySelector("#pay-1");
         var pay2 = document.querySelector("#pay-2");
+                // hide second modal
+                pay2.setAttribute('style', 'display:none !important');
         // show first modal
         pay1.setAttribute('style', 'display:flex !important');
-        // hide second modal
-        pay2.setAttribute('style', 'display:none !important');
+
     };
 
 // show new transactions every 5 seconds
