@@ -217,6 +217,21 @@ class Transaction{
         return $data;
     }
 
+    public static function getTransactionById($id){
+
+        $conn = Database::getConnection();
+
+        $statement = $conn->prepare("SELECT * FROM transactions WHERE sender LIKE CONCAT('%',:id ,'%') OR receiver like  CONCAT('%',:id ,'%')");
+
+        $statement->bindValue(":id", $id);
+
+        $statement->execute();
+
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $data;
+    }
+
 
 
 

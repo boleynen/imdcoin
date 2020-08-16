@@ -320,7 +320,9 @@ class User{
     }
 
     public static function getUserByName($name){
+        
         $conn = Database::getConnection();
+
         $statement = $conn->prepare("SELECT id, name, currency FROM users WHERE name LIKE CONCAT('%',:name ,'%') ");
 
         $statement->bindValue(":name", $name);

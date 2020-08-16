@@ -121,6 +121,7 @@ if(!empty($_POST['claim-gift-btn'])){
 
 <body >
     <main id="mainIndex" style="display: flex">
+        
         <div class="h-100" style="max-width: 400px; max-height: 700px; margin: auto; overflow: hidden; position: absolute; top:0; bottom: 0; left: 0; right: 0; border: 1px solid #dfdfdf">
 
             <?php if(isset($error)):?>
@@ -185,8 +186,8 @@ if(!empty($_POST['claim-gift-btn'])){
                         ?>
 
                     <li class="list-group-item">
-                        <a href="#transactionCollapse<?php echo $transactions[$i]['id'] ?>" class="text-dark"
-                            data-toggle="collapse" aria-expanded="false" aria-controls="transactionCollapse">
+                        <a href="#transactionCollapse<?php echo $transactions[$i]['id'] ?>" class="text-dark transaction-item"
+                        type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm1">
                             <div class="row">
                                 <div class="col-3 align-self-start my-auto">
                                     <img src="avatars/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
@@ -204,11 +205,21 @@ if(!empty($_POST['claim-gift-btn'])){
                     </li>
 
                         <!-- INFO ABOUT TRANSACTION COLLAPSE -->
-                        <div class="collapse" id="transactionCollapse<?php echo $transactions[$i]['id'] ?>">
-                            <div class="card card-body border-top-0">
-                                <p><span class="font-weight-bold">Date: </span><?php echo $transactions[$i]['date']?></p>
-                                <p><span class="font-weight-bold">Reason for payment: </span><?php echo $transactions[$i]['reason']?></p>
+                        <div class="modal fade bd-example-modal-sm1" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Transaction details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
+                            <div class="modal-body">
+                                <p>Message: </br><span class="transaction-reason font-weight-bold"> </span></p>
+                                <p>Date: </br><span class="transaction-date font-weight-bold"></span></p>
+                            </div>
+                            </div>
+                        </div>
                         </div>
 
                     <?php
@@ -222,8 +233,8 @@ if(!empty($_POST['claim-gift-btn'])){
                         ?>
 
                     <li class="list-group-item">
-                        <a href="#transactionCollapse<?php echo $transactions[$i]['id'] ?>" class="text-dark"
-                            data-toggle="collapse" aria-expanded="false" aria-controls="transactionCollapse">
+                        <a href="#transactionCollapse<?php echo $transactions[$i]['id'] ?>" id="transactionCollapse<?php echo $transactions[$i]['id'] ?>" class="text-dark transaction-item"
+                        type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">
                             <div class="row">
                                 <div class="col-3 align-self-start my-auto">
                                     <img src="avatars/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
@@ -241,13 +252,22 @@ if(!empty($_POST['claim-gift-btn'])){
                     </li>
 
                         <!-- INFO ABOUT TRANSACTION COLLAPSE -->
-                        <div class="collapse" id="transactionCollapse<?php echo $transactions[$i]['id'] ?>">
-                            <div class="card card-body border-top-0">
-                                <p><span class="font-weight-bold">Date: </span><?php echo $transactions[$i]['date']?></p>
-                                <p><span class="font-weight-bold">Reason for payment: </span><?php echo $transactions[$i]['reason']?></p>
+                        <div class="modal fade bd-example-modal-sm" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Transaction details!</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Message: </br><span class="transaction-reason1 font-weight-bold"> </span></p>
+                                <p>Date: </br><span class="transaction-date1 font-weight-bold"></span></p>
+                            </div>
                             </div>
                         </div>
-
+                        </div>
 
                     <?php
                     }
@@ -415,6 +435,45 @@ if(!empty($_POST['claim-gift-btn'])){
             
             }
 
+
+            var transaction = document.getElementsByClassName("transaction-item");
+
+            var transactionDate = document.querySelector(".transaction-date");
+            var transactionDate1 = document.querySelector(".transaction-date1");
+            var transactionReason = document.querySelector(".transaction-reason");
+            var transactionReason1 = document.querySelector(".transaction-reason1");
+            var transactionItem = document.querySelector(".transaction-item");
+                
+            const myId = <?php echo $profile[0]['id'] ?>;
+
+            var collapseIt = function() {
+                fetch('./ajax/a.transaction.php?id='+myId)
+                .then(response => {
+                    return response.json();
+                })
+                .then(result => {
+                    var details = result.body;
+                    printTransaction(details);
+                    console.log(details);
+                    
+                })
+                .catch((error) => console.log(error))
+            };
+
+            function printTransaction(details){
+                    details.forEach(detail => {
+                        transactionReason.innerHTML = detail['reason'];
+                        transactionReason1.innerHTML = detail['reason'];
+                        transactionDate.innerHTML = detail['date'];
+                        transactionDate1.innerHTML = detail['date'];
+                    });
+            }
+
+            for (var i = 0; i < transaction.length; i++) {
+                transaction[i].addEventListener('click', collapseIt, false);
+            }
+
+
             // search for person autocomplete'
             // search input
             var searchInput = document.querySelector("#search-name");
@@ -436,7 +495,7 @@ if(!empty($_POST['claim-gift-btn'])){
                     if(input.length > 2){
                         // fetch data from search.php,
                         // $_GET['name'] (in search.php) = the search input
-                        fetch('./ajax/search.php?name='+input)
+                        fetch('./ajax/a.search.php?name='+input)
                         .then(response => {
                             // then return response in json format
                             return response.json();
