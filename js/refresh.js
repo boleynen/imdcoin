@@ -1,6 +1,6 @@
 window.onload = function(){
     refreshCurrency();
-    refreshTransactions();
+    showTransactions();
 }
 
 var currencyOutput = document.querySelector("#my-curr");
@@ -19,24 +19,63 @@ function refreshCurrency(){
         .catch((error) => console.log(error))
 }
 
+
+// show transactions op start page, then loop to see if there are changes with refreshTransactions()
+var showTransactions = function() {
+    fetch('./ajax/a.transaction.php?id='+window.localStorage.getItem('myId'))
+    .then(response => {
+        return response.json();
+    })
+    .then(result => {
+        var payments = result.body;
+
+        refreshContent(payments);
+        refreshTransactions();
+
+    })
+    .catch((error) => console.log(error))
+
+};
+
+
 // refresh transactions
     var refreshTransactions = function() {
-        fetch('./ajax/a.transaction.php?id='+window.localStorage.getItem('myId'))
-        .then(response => {
-            return response.json();
-        })
-        .then(result => {
-            var payments = result.body;
-            refreshContent(payments);
+        setInterval(function() {
+            fetch('./ajax/a.transaction.php?id='+window.localStorage.getItem('myId'))
+            .then(response => {
+                return response.json();
+            })
+            .then(result => {
+                var payments = result.body;
 
-            setTimeout(function() {
-                refreshTransactions();
-            }, 10000)
-        })
-        .catch((error) => console.log(error))
+                let paymentsStorage = parseInt(localStorage.getItem('paymentsAmount'));
+
+                        console.log("payments = "+payments.length);
+                        console.log("storage = "+paymentsStorage);
+
+                    if(paymentsStorage === payments.length){
+
+                        console.log("payments = "+payments.length);
+                        console.log("storage = "+paymentsStorage);
+
+                    }else if(paymentsStorage != payments.length){
+
+                        window.localStorage.setItem('paymentsAmount', payments.length);
+                        refreshContent(payments);
+                        console.log("there were changes");
+
+                    }
+
+            })
+            .catch((error) => console.log(error))
+        }, 1000)
+
     };
 
 
+
+
+    
 
 // load transactions every 5 sec
 let unorderedList = document.querySelector("#transaction-ul");

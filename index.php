@@ -20,6 +20,9 @@ $allUsers = $userProfile->getAllUsers();
 $payment = new Transaction();
 $payment->setId($profile[0]['id']);
 $transactions = $payment->getTransactions();
+$transactionLength = count($transactions);
+// echo $transactionLength;
+
 
 $payUser = new User();
 $userGotPaid = new Transaction();
@@ -171,11 +174,7 @@ if(!empty($_POST['claim-gift-btn'])){
                 <div class="ml-3 mr-3 sticky-top bg-white" style="display: block !important; width: 100%">
                     <p><strong>Recent transactions</strong></p>
                 </div>
-                <ul id="transaction-ul" class="ml-3 mr-3 list-group list-group-flush w-100">
-
-
-
-                </ul>
+                <ul id="transaction-ul" class="ml-3 mr-3 list-group list-group-flush w-100"></ul>
                     <!-- INFO ABOUT TRANSACTION COLLAPSE -->
                         <div class="modal fade bd-example-modal-sm" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -341,6 +340,7 @@ if(!empty($_POST['claim-gift-btn'])){
 
     <script>
         window.localStorage.setItem('myId', <?php echo $profile[0]['id'] ?>);
+        window.localStorage.setItem('paymentsAmount', <?php echo $transactionLength ?>);
     </script>
 </body>
 

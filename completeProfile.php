@@ -8,11 +8,6 @@ if(!empty($_POST['complete-submit'])){
     $emptyFields = false;
     $imgPath = $_FILES["avatar"]["name"];
 
-    // var_dump($imgPath);
-    // var_dump($_POST['name']);
-    // var_dump($_POST['year']);
-
-
     try {
         $file           = $_FILES['avatar'];
         $fileName       = $_FILES['avatar']['name'];
@@ -147,7 +142,7 @@ if(!empty($_POST['complete-submit'])){
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
     </script>
-    <script src="js.js"></script>
+    <script src="js/js.js"></script>
 </body>
 
 </html>

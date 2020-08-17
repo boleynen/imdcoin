@@ -204,7 +204,7 @@ class Transaction{
                                      where 
                                      receiver like :id 
                                      or 
-                                     sender like :id order by date DESC");
+                                     sender like :id order by date ASC");
 
         $id = $this->getId();
         
