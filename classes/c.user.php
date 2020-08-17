@@ -347,6 +347,21 @@ class User{
 
         return $data;
     }
+
+    public static function getUserById($id){
+
+        $conn = Database::getConnection();
+
+        $statement = $conn->prepare("SELECT name, year, avatar FROM users WHERE id LIKE CONCAT('%',:id ,'%')");
+
+        $statement->bindValue(":id", $id);
+
+        $statement->execute();
+
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $data;
+    }
 }
 
 ?>

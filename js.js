@@ -40,15 +40,4 @@
 
     };
 
-// show new transactions every 5 seconds
-    // $(document).ready(function() {
-    //     // execute refreshCurrency every 5 seconds
-    //     setInterval(refreshCurrency, 5000);
-    //     function refreshCurrency() {
-    //         // refresh mu currency
-    //         $('#my-currency h3').load('index.php #my-currency h3');
-    //         // refresh recent transactions
-    //         $('#my-transactions-container').load('index.php #my-transactions');
-    //     }
-    // });
 

@@ -171,41 +171,13 @@ if(!empty($_POST['claim-gift-btn'])){
                 <div class="ml-3 mr-3 sticky-top bg-white" style="display: block !important; width: 100%">
                     <p><strong>Recent transactions</strong></p>
                 </div>
-                <ul class="ml-3 mr-3 list-group list-group-flush w-100">
+                <ul id="transaction-ul" class="ml-3 mr-3 list-group list-group-flush w-100">
 
-                    <?php 
-                $i=-1;
-                foreach($transactions as $transaction){
-                
-                    if($transaction['sender'] == $profile[0]['id']){
-                        $i++;
-                        $userProfile->setId($transactions[$i]['receiver']);
-                        $transactionUser = $userProfile->getUser();
-                        $avatarUser = $userProfile->getUserAvatar();
-                        $yearUser = $userProfile->getUserYear();
-                        ?>
 
-                    <li class="list-group-item">
-                        <a href="#transactionCollapse<?php echo $transactions[$i]['id'] ?>" class="text-dark transaction-item"
-                        type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm1">
-                            <div class="row">
-                                <div class="col-3 align-self-start my-auto">
-                                    <img src="avatars/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
-                                        class="img-responsive avatar-img">
-                                </div>
-                                <div class="col-6 my-auto">
-                                    <?php echo $transactionUser[0]['name'] ?>, 
-                                    <small class="form-text text-muted"><?php echo $yearUser[0]['year'] ?>IMD</small>
-                                </div>
-                                <div class="col-3 align-self-end my-auto">
-                                    <strong class="text-danger">-<?php echo $transactions[$i]['amount']?> C</strong>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
 
-                        <!-- INFO ABOUT TRANSACTION COLLAPSE -->
-                        <div class="modal fade bd-example-modal-sm1" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                </ul>
+                    <!-- INFO ABOUT TRANSACTION COLLAPSE -->
+                        <div class="modal fade bd-example-modal-sm" id="details-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                             <div class="modal-header">
@@ -221,63 +193,6 @@ if(!empty($_POST['claim-gift-btn'])){
                             </div>
                         </div>
                         </div>
-
-                    <?php
-                        
-                    }else{
-                        $i++;
-                        $userProfile->setId($transactions[$i]['sender']);
-                        $transactionUser = $userProfile->getUser();
-                        $avatarUser = $userProfile->getUserAvatar();
-                        $yearUser = $userProfile->getUserYear();
-                        ?>
-
-                    <li class="list-group-item">
-                        <a href="#transactionCollapse<?php echo $transactions[$i]['id'] ?>" id="transactionCollapse<?php echo $transactions[$i]['id'] ?>" class="text-dark transaction-item"
-                        type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">
-                            <div class="row">
-                                <div class="col-3 align-self-start my-auto">
-                                    <img src="avatars/<?php echo $avatarUser[0]['avatar'] ?>" alt="avatar"
-                                        class="img-responsive avatar-img">
-                                </div>
-                                <div class="col-6 my-auto">
-                                    <?php echo $transactionUser[0]['name'] ?>, 
-                                    <small class="form-text text-muted"><?php echo $yearUser[0]['year'] ?>IMD</small>
-                                </div>
-                                <div class="col-3 align-self-end my-auto">
-                                    <strong class="text-success">+<?php echo $transactions[$i]['amount']?> C</strong>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                        <!-- INFO ABOUT TRANSACTION COLLAPSE -->
-                        <div class="modal fade bd-example-modal-sm" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Transaction details!</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Message: </br><span class="transaction-reason1 font-weight-bold"> </span></p>
-                                <p>Date: </br><span class="transaction-date1 font-weight-bold"></span></p>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-
-                    <?php
-                    }
-
-                }
-                ?>
-
-
-
-                </ul>
             </div>
             </div>
 
@@ -426,6 +341,7 @@ if(!empty($_POST['claim-gift-btn'])){
 
         window.onload = function(){
             refreshCurrency();
+            refreshTransactions();
         }
 
         const myId = <?php echo $profile[0]['id'] ?>;
@@ -441,49 +357,141 @@ if(!empty($_POST['claim-gift-btn'])){
                 })
                 .then(result => {
                     var curr = result.body;
-                    // console.log(curr['currency']);
                     currencyOutput.innerHTML = curr['currency'];
-                    setTimeout(refreshCurrency, 5000);
+                    setTimeout(refreshCurrency, 7000);
                 })
                 .catch((error) => console.log(error))
         }
 
-
-        // show transaction details
-            var transaction = document.getElementsByClassName("transaction-item");
-
-            var transactionDate = document.querySelector(".transaction-date");
-            var transactionDate1 = document.querySelector(".transaction-date1");
-            var transactionReason = document.querySelector(".transaction-reason");
-            var transactionReason1 = document.querySelector(".transaction-reason1");
-            var transactionItem = document.querySelector(".transaction-item");
-                
-
-            var showDetails = function() {
+        // refresh transactions
+            var refreshTransactions = function() {
                 fetch('./ajax/a.transaction.php?id='+myId)
                 .then(response => {
                     return response.json();
                 })
                 .then(result => {
-                    var details = result.body;
-                    printTransaction(details);
-                    
+                    var payments = result.body;
+                    refreshContent(payments);
+
+                    setTimeout(function() {
+                        refreshTransactions();
+                    }, 5000)
                 })
                 .catch((error) => console.log(error))
             };
 
-            function printTransaction(details){
-                    details.forEach(detail => {
-                        transactionReason.innerHTML = detail['reason'];
-                        transactionReason1.innerHTML = detail['reason'];
-                        transactionDate.innerHTML = detail['date'];
-                        transactionDate1.innerHTML = detail['date'];
-                    });
+
+            // show transaction details
+
+            var transactionDate = document.querySelector(".transaction-date");
+            var transactionReason = document.querySelector(".transaction-reason");
+
+            if(element.classList.contains(class));
+
+            // load transactions every 5 sec
+            let unorderedList = document.querySelector("#transaction-ul");
+            let transactionModal = document.querySelector("#details-modal");
+
+            function refreshContent(payments){
+
+                unorderedList.innerHTML="";
+
+                payments.forEach(payment => {
+
+
+                    let listItem = document.createElement('li');
+                    let linkItem = document.createElement('a');
+                    let divItem = document.createElement('div');
+                    let avatarDivItem = document.createElement('div');
+                    let nameDivItem = document.createElement('div');
+                    let amountDivItem = document.createElement('div');
+                    let imgItem = document.createElement('img');
+                    let smallItem = document.createElement('small');
+                    let strongItem = document.createElement('strong');
+
+                    listItem.setAttribute('class', 'list-group-item');
+                    linkItem.setAttribute('href', '#');
+                    linkItem.setAttribute('class', 'text-dark transaction-item');
+                    linkItem.setAttribute('type', 'button');
+                    linkItem.setAttribute('data-toggle', 'modal');
+                    linkItem.setAttribute('data-target', '.bd-example-modal-sm');
+                    // linkItem.setAttribute('data-id', payment['id']);
+                    divItem.setAttribute('class', 'row');
+                    avatarDivItem.setAttribute('class', 'col-3 align-self-start my-auto');
+                    imgItem.setAttribute('class', 'transaction-img');
+                    imgItem.setAttribute('src', '#');
+                    imgItem.setAttribute('alt', 'avatar');
+                    imgItem.setAttribute('class', 'img-responsive avatar-img');
+                    nameDivItem.setAttribute('class', 'col-6 my-auto transaction-name');
+                    smallItem.setAttribute('class', 'form-text text-muted transaction-year');
+                    amountDivItem.setAttribute('class', 'col-3 align-self-end my-auto');
+                    
+
+                    divItem.appendChild(avatarDivItem);
+                    divItem.appendChild(nameDivItem);
+                    divItem.appendChild(amountDivItem);
+                    avatarDivItem.appendChild(imgItem);
+                    nameDivItem.appendChild(smallItem);
+                    amountDivItem.appendChild(strongItem);
+                    linkItem.appendChild(divItem);
+                    listItem.appendChild(linkItem);
+                    unorderedList.appendChild(listItem);
+
+                    
+                    if(payment['sender'] == myId){
+                        strongItem.setAttribute('class', 'transaction-amount text-danger');
+                        strongItem.innerHTML = "-"+payment['amount']+" C";
+
+                        var id = payment['receiver'];
+                        getUserData(id);
+
+                        function getUserData(id){
+                            fetch('./ajax/a.user.php?id='+id)
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(result => {
+                                var receiver = result.body;
+                                imgItem.setAttribute('src', 'avatars/'+receiver[0]['avatar']);
+                                var nameText = document.createTextNode(receiver[0]['name']); 
+                                nameDivItem.appendChild(nameText);
+                                smallItem.innerHTML = receiver[0]['year'] + " IMD";
+                            })
+                            .catch((error) => console.log(error))
+                        };
+
+                    }else{
+                        strongItem.setAttribute('class', 'transaction-amount text-success');
+                        strongItem.innerHTML = "+"+payment['amount']+" C";
+
+                        var id = payment['sender'];
+                        getUserData(id);
+                        
+                        function getUserData(id){
+                            fetch('./ajax/a.user.php?id='+id)
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(result => {
+                                var sender = result.body;
+                                imgItem.setAttribute('src', 'avatars/'+sender[0]['avatar']);
+                                var nameText = document.createTextNode(sender[0]['name']); 
+                                nameDivItem.appendChild(nameText);
+                                smallItem.innerHTML = sender[0]['year'] + " IMD";
+                            
+                            })
+                            .catch((error) => console.log(error))
+                        };
+                        
+                    }
+
+
+                })
+
+                
             }
 
-            for (var i = 0; i < transaction.length; i++) {
-                transaction[i].addEventListener('click', showDetails, false);
-            }
+            
 
 
         // search for person autocomplete
