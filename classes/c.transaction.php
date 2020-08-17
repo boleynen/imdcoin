@@ -236,7 +236,7 @@ class Transaction{
 
         $conn = Database::getConnection();
 
-        $statement = $conn->prepare("SELECT * FROM transactions WHERE id LIKE CONCAT('%',:id ,'%')");
+        $statement = $conn->prepare("SELECT reason, date FROM transactions WHERE id=:id");
 
         $statement->bindValue(":id", $id);
 

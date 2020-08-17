@@ -177,7 +177,7 @@ if(!empty($_POST['claim-gift-btn'])){
 
                 </ul>
                     <!-- INFO ABOUT TRANSACTION COLLAPSE -->
-                        <div class="modal fade bd-example-modal-sm" id="details-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal fade bd-example-modal-sm" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                             <div class="modal-header">
@@ -333,7 +333,7 @@ if(!empty($_POST['claim-gift-btn'])){
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
     </script>
     <script src="js.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
 
 
     <script>
@@ -358,7 +358,7 @@ if(!empty($_POST['claim-gift-btn'])){
                 .then(result => {
                     var curr = result.body;
                     currencyOutput.innerHTML = curr['currency'];
-                    setTimeout(refreshCurrency, 7000);
+                    setTimeout(refreshCurrency, 1000000);
                 })
                 .catch((error) => console.log(error))
         }
@@ -375,7 +375,7 @@ if(!empty($_POST['claim-gift-btn'])){
 
                     setTimeout(function() {
                         refreshTransactions();
-                    }, 5000)
+                    }, 100000)
                 })
                 .catch((error) => console.log(error))
             };
@@ -385,12 +385,35 @@ if(!empty($_POST['claim-gift-btn'])){
 
             var transactionDate = document.querySelector(".transaction-date");
             var transactionReason = document.querySelector(".transaction-reason");
+            let transactionModal = document.querySelector(".bd-example-modal-sm");
 
-            if(element.classList.contains(class));
+
+            document.querySelector("#transaction-ul").addEventListener('click',function(e){
+                if(e.target === (e.target.tagName ==='STRONG') || (e.target.tagName ==='SMALL') || (e.target.tagName ==='IMG') || (e.target.tagName ==='DIV')){
+                    // console.log(e.target.getAttribute('data-id'));
+                    let dataId = e.target.getAttribute('data-id');
+                    dataId = parseInt(dataId);
+
+                    fetch('./ajax/a.transactionDetails.php?id='+dataId)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(result => {
+                        var reasonAndDate = result.body;
+                        var reason = reasonAndDate[0]['reason'];
+                        var date = reasonAndDate[0]['date'];
+
+                        transactionReason.innerText = reason;
+                        transactionDate.innerText = date;
+                    })
+                    .catch((error) => console.log(error))
+                    }
+
+            });
+
 
             // load transactions every 5 sec
             let unorderedList = document.querySelector("#transaction-ul");
-            let transactionModal = document.querySelector("#details-modal");
 
             function refreshContent(payments){
 
@@ -398,16 +421,24 @@ if(!empty($_POST['claim-gift-btn'])){
 
                 payments.forEach(payment => {
 
-
                     let listItem = document.createElement('li');
+                    listItem.setAttribute('data-id', payment['id']);
                     let linkItem = document.createElement('a');
+                    linkItem.setAttribute('data-id', payment['id']);
                     let divItem = document.createElement('div');
+                    divItem.setAttribute('data-id', payment['id']);
                     let avatarDivItem = document.createElement('div');
+                    avatarDivItem.setAttribute('data-id', payment['id']);
                     let nameDivItem = document.createElement('div');
+                    nameDivItem.setAttribute('data-id', payment['id']);
                     let amountDivItem = document.createElement('div');
+                    amountDivItem.setAttribute('data-id', payment['id']);
                     let imgItem = document.createElement('img');
+                    imgItem.setAttribute('data-id', payment['id']);
                     let smallItem = document.createElement('small');
+                    smallItem.setAttribute('data-id', payment['id']);
                     let strongItem = document.createElement('strong');
+                    strongItem.setAttribute('data-id', payment['id']);
 
                     listItem.setAttribute('class', 'list-group-item');
                     linkItem.setAttribute('href', '#');
@@ -415,7 +446,6 @@ if(!empty($_POST['claim-gift-btn'])){
                     linkItem.setAttribute('type', 'button');
                     linkItem.setAttribute('data-toggle', 'modal');
                     linkItem.setAttribute('data-target', '.bd-example-modal-sm');
-                    // linkItem.setAttribute('data-id', payment['id']);
                     divItem.setAttribute('class', 'row');
                     avatarDivItem.setAttribute('class', 'col-3 align-self-start my-auto');
                     imgItem.setAttribute('class', 'transaction-img');
